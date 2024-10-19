@@ -20,7 +20,7 @@ public class MobFarmBlockItem extends BlockItem {
 	
 	public MobFarmBlockItem(MobFarmBlock block, Properties builder) {
 		//noinspection UnstableApiUsage
-		super(block, builder.arch$tab(TinyMobFarm.JOBSPLUS_TOOLS_TAB.get()).stacksTo(64));
+		super(block, builder.arch$tab(TinyMobFarm.JOBSPLUS_TOOLS_TAB).stacksTo(64));
 		this.tooltipBuilder = block.getTooltipBuilder();
 	}
 
