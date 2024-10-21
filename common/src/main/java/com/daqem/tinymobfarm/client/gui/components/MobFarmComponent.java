@@ -9,15 +9,17 @@ import com.daqem.uilib.client.gui.text.Text;
 import com.daqem.uilib.client.gui.text.TruncatedText;
 import com.daqem.uilib.client.gui.texture.Texture;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class MobFarmComponent extends TextureComponent {
 
-    private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(TinyMobFarm.MOD_ID, "textures/gui/farm_gui.png");
+    private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(TinyMobFarm.MOD_ID, "textures/gui/farm_gui.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
     private static final Component NO_LASSO = TinyMobFarm.translatable("gui.no_lasso");
@@ -69,7 +71,6 @@ public class MobFarmComponent extends TextureComponent {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
-
         TruncatedText entityText = new TruncatedText(this.font,
                 parent.getLasso().getItem() instanceof LassoItem lassoItem ?
                         lassoItem.getMobName(parent.getLasso()) :

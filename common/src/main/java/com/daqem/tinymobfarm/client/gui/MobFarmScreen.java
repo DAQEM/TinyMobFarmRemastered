@@ -2,11 +2,17 @@ package com.daqem.tinymobfarm.client.gui;
 
 import com.daqem.tinymobfarm.MobFarmType;
 import com.daqem.tinymobfarm.client.gui.components.MobFarmComponent;
+import com.daqem.tinymobfarm.util.EntityHelper;
 import com.daqem.uilib.client.gui.AbstractContainerScreen;
 import com.daqem.uilib.client.gui.background.Backgrounds;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -26,9 +32,9 @@ public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
 
 	@Override
 	public void startScreen() {
-		setBackground(Backgrounds.getDefaultBackground(this.width, this.height));
+		setBackground(null);
 
-        MobFarmComponent mobFarmComponent = new MobFarmComponent(this, this.font);
+		MobFarmComponent mobFarmComponent = new MobFarmComponent(this, this.font);
 		mobFarmComponent.center();
 		addComponents(mobFarmComponent);
 	}
@@ -37,6 +43,7 @@ public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
 	public void onTickScreen(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 	}
 
+	//Makes sure the default titles are not rendered
 	@Override
 	protected void renderLabels(GuiGraphics guiGraphics, int i, int j) {
 	}

@@ -6,6 +6,7 @@ import com.daqem.tinymobfarm.event.MobInteractionEvent;
 import com.daqem.tinymobfarm.item.MobFarmBlockItem;
 import com.daqem.tinymobfarm.item.LassoItem;
 import com.daqem.tinymobfarm.blockentity.MobFarmBlockEntity;
+import com.daqem.tinymobfarm.item.component.LassoData;
 import com.google.common.base.Suppliers;
 import com.mojang.logging.LogUtils;
 import dev.architectury.registry.CreativeTabRegistry;
@@ -13,6 +14,7 @@ import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -58,6 +60,10 @@ public class TinyMobFarm {
 
     public static final RegistrySupplier<BlockEntityType<MobFarmBlockEntity>> MOB_FARM_TILE_ENTITY = BLOCK_ENTITIES.register(getId("mob_farm_block_entity"), () -> BlockEntityType.Builder.of(MobFarmBlockEntity::new, TinyMobFarm.WOODEN_MOB_FARM_BLOCK.get(), TinyMobFarm.STONE_MOB_FARM_BLOCK.get(), TinyMobFarm.IRON_MOB_FARM_BLOCK.get(), TinyMobFarm.GOLD_MOB_FARM_BLOCK.get(), TinyMobFarm.DIAMOND_MOB_FARM_BLOCK.get(), TinyMobFarm.EMERALD_MOB_FARM_BLOCK.get(), TinyMobFarm.INFERNAL_MOB_FARM_BLOCK.get(), TinyMobFarm.ULTIMATE_MOB_FARM_BLOCK.get()).build(null));
 
+    public static final Registrar<DataComponentType<?>> COMPONENTS = MANAGER.get().get(Registries.DATA_COMPONENT_TYPE);
+
+    public static final RegistrySupplier<DataComponentType<LassoData>> LASSO_DATA = COMPONENTS.register(getId("lasso_data"), () -> ((DataComponentType.Builder) DataComponentType.builder()).persistent(LassoData.CODEC).networkSynchronized(LassoData.STREAM_CODEC).build());
+
     public static final Registrar<Item> ITEMS = MANAGER.get().get(Registries.ITEM);
 
     public static final RegistrySupplier<LassoItem> LASSO = ITEMS.register(getId("lasso"), () -> new LassoItem(new Item.Properties()));
@@ -101,7 +107,7 @@ public class TinyMobFarm {
     }
 
     public static ResourceLocation getId(String str) {
-        return new ResourceLocation(MOD_ID, str);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, str);
     }
 
 }

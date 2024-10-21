@@ -9,6 +9,6 @@ pluginManagement {
 
 include("common")
 include("fabric")
-include("forge")
+include("neoforge")
 
-rootProject.name = "tinymobfarm"
+rootProject.name = "TinyMobFarmRemastered 1.21"

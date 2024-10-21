@@ -32,5 +32,6 @@
 	"tinymobfarm.tooltip.durability_info": "Lasso durability loss:",
 	"tinymobfarm.tooltip.no_hostile": "Cannot farm hostile mobs.",
 	"tinymobfarm.tooltip.no_durability": "- %d%% chance to loss no durability",
-	"tinymobfarm.tooltip.default_durability": "- %d%% chance to loss %d durability"
+	"tinymobfarm.tooltip.default_durability": "- %d%% chance to loss %d durability",
+	"tinymobfarm.tooltip.unknown.key": "Unknown"
 }

@@ -110,7 +110,7 @@ curseforge {
             addGameVersion version
         }
 
-        addGameVersion "Java 17"
+        addGameVersion "Java 21"
         addGameVersion "Fabric"
 
         relations {

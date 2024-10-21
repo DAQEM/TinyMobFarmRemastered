@@ -2,15 +2,17 @@ package com.daqem.tinymobfarm.item;
 
 import com.daqem.tinymobfarm.ConfigTinyMobFarm;
 import com.daqem.tinymobfarm.TinyMobFarm;
+import com.daqem.tinymobfarm.item.component.LassoData;
 import com.daqem.tinymobfarm.util.EntityHelper;
-import com.daqem.tinymobfarm.util.NBTHelper;
-import dev.architectury.event.events.common.PlayerEvent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -24,107 +26,105 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class LassoItem extends Item {
 
-	public LassoItem(Properties properties) {
-		//noinspection UnstableApiUsage
-		super(properties.arch$tab(TinyMobFarm.JOBSPLUS_TOOLS_TAB).defaultDurability(ConfigTinyMobFarm.lassoDurability.get()));
-	}
+    public LassoItem(Properties properties) {
+        //noinspection UnstableApiUsage
+        super(properties
+                .arch$tab(TinyMobFarm.JOBSPLUS_TOOLS_TAB)
+                .durability(ConfigTinyMobFarm.lassoDurability.get()));
+    }
 
-	public @NotNull InteractionResult interactMob(ItemStack stack, Player player, LivingEntity target, InteractionHand interactionHand) {
-		if (NBTHelper.hasMob(stack) || !target.isAlive() || !(target instanceof Mob)) return InteractionResult.FAIL;
+    public @NotNull InteractionResult interactMob(ItemStack stack, Player player, LivingEntity target, InteractionHand interactionHand) {
+        if (stack.has(TinyMobFarm.LASSO_DATA.get())
+                || !target.isAlive()
+                || !(target instanceof Mob)) {
+            return InteractionResult.FAIL;
+        }
 
-		Level level = player.level();
-		CompoundTag nbt = NBTHelper.getBaseTag(stack);
+        if (player.level() instanceof ServerLevel serverLevel) {
+            if (!target.canUsePortal(false)) {
+                player.sendSystemMessage(TinyMobFarm.translatable("error.cannot_capture_boss"));
+                return InteractionResult.SUCCESS;
+            }
+            CompoundTag mobData = target.saveWithoutId(new CompoundTag());
+            ListTag pos = new ListTag();
+            pos.add(DoubleTag.valueOf(target.getX()));
+            pos.add(DoubleTag.valueOf(target.getY()));
+            mobData.put("Rotation", pos);
+            mobData.remove("Fire");
+            mobData.remove("HurtTime");
 
-		// Cannot capture boss.
-		if (!target.canChangeDimensions()) {
-			if (!level.isClientSide()) {
-				player.sendSystemMessage(TinyMobFarm.translatable("error.cannot_capture_boss"));
-			}
-			return InteractionResult.SUCCESS;
-		}
+            LassoData lassoData = new LassoData(
+                    target.getName().getString(),
+                    target.getType().arch$registryName(),
+                    mobData,
+                    target.getHealth(),
+                    target.getMaxHealth(),
+                    target instanceof Monster,
+                    target.getLootTable().location()
+            );
 
-		if (!level.isClientSide()) {
-			CompoundTag mobData = target.saveWithoutId(new CompoundTag());
-			mobData.put("Rotation", NBTHelper.createNBTList(
-					DoubleTag.valueOf(0), DoubleTag.valueOf(0)));
-			mobData.remove("Fire");
-			mobData.remove("HurtTime");
+            stack.set(TinyMobFarm.LASSO_DATA.get(), lassoData);
+            target.discard();
+            player.getInventory().setChanged();
+        }
 
-			nbt.put(NBTHelper.MOB_DATA, mobData);
+        return InteractionResult.SUCCESS;
+    }
 
-			Component name = target.getName();
-			nbt.putString(NBTHelper.MOB_NAME, name.getString());
-			nbt.putString(NBTHelper.MOB_ID, String.valueOf(target.getType().arch$registryName()));
-			nbt.putString(NBTHelper.MOB_LOOTTABLE_LOCATION, EntityHelper.getLootTableLocation(target));
-			nbt.putDouble(NBTHelper.MOB_HEALTH, Math.round(target.getHealth() * 10) / 10.0);
-			nbt.putDouble(NBTHelper.MOB_MAX_HEALTH, target.getMaxHealth());
-			nbt.putBoolean(NBTHelper.MOB_HOSTILE, target instanceof Monster);
+    @Override
+    public @NotNull InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player == null) return InteractionResult.FAIL;
 
-			target.discard();
-			player.getInventory().setChanged();
-		}
+        ItemStack stack = context.getItemInHand();
+        if (!stack.has(TinyMobFarm.LASSO_DATA.get())) return InteractionResult.FAIL;
 
-		return InteractionResult.SUCCESS;
-	}
+        Direction facing = context.getClickedFace();
+        BlockPos pos = context.getClickedPos().offset(facing.getStepX(), facing.getStepY(), facing.getStepZ());
+        Level level = context.getLevel();
 
-	@Override
-	public @NotNull InteractionResult useOn(UseOnContext context) {
-		Player player = context.getPlayer();
-		if (player == null) return InteractionResult.FAIL;
+        if (!player.mayUseItemAt(pos, facing, stack)) return InteractionResult.FAIL;
 
-		ItemStack stack = context.getItemInHand();
-		if (!NBTHelper.hasMob(stack)) return InteractionResult.FAIL;
+        if (!level.isClientSide() && level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+            Entity mob = EntityHelper.getEntityFromLasso(stack, pos, level);
+            if (mob != null) level.addFreshEntity(mob);
 
-		Direction facing = context.getClickedFace();
-		BlockPos pos = context.getClickedPos().offset(facing.getStepX(), facing.getStepY(), facing.getStepZ());
-		Level level = context.getLevel();
+            stack.remove(TinyMobFarm.LASSO_DATA.get());
+            stack.hurtAndBreak(1, serverLevel, serverPlayer, player1 -> {
+            });
+        }
 
-		if (!player.mayUseItemAt(pos, facing, stack)) return InteractionResult.FAIL;
+        return InteractionResult.SUCCESS;
+    }
 
-		if (!level.isClientSide()) {
-			Entity mob = EntityHelper.getEntityFromLasso(stack, pos, level);
-			if (mob != null) level.addFreshEntity(mob);
+    @Override
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+        if (itemStack.has(TinyMobFarm.LASSO_DATA.get())) {
+            LassoData data = itemStack.get(TinyMobFarm.LASSO_DATA.get());
+            list.add(TinyMobFarm.translatable("tooltip.release_mob.key", ChatFormatting.GRAY));
+            list.add(TinyMobFarm.translatable("tooltip.mob_name.key", ChatFormatting.GRAY, getMobName(itemStack)));
+            list.add(TinyMobFarm.translatable("tooltip.mob_id.key", ChatFormatting.GRAY, data.mobId().toString()));
+            list.add(TinyMobFarm.translatable("tooltip.health.key", ChatFormatting.GRAY, data.mobHealth(), data.mobMaxHealth()));
+            if (data.mobHostile()) {
+                list.add(TinyMobFarm.translatable("tooltip.hostile.key", ChatFormatting.GRAY));
+            }
+        } else {
+            list.add(TinyMobFarm.translatable("tooltip.capture.key", ChatFormatting.GRAY));
+        }
+    }
 
-			stack.removeTagKey(NBTHelper.MOB);
-			stack.hurtAndBreak(1, player, player1 -> {});
-		}
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        return stack.has(TinyMobFarm.LASSO_DATA.get());
+    }
 
-		return InteractionResult.SUCCESS;
-	}
-
-	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-		if (NBTHelper.hasMob(stack)) {
-			CompoundTag nbt = NBTHelper.getBaseTag(stack);
-			String id = nbt.getString(NBTHelper.MOB_ID);
-			double health = nbt.getDouble(NBTHelper.MOB_HEALTH);
-			double maxHealth = nbt.getDouble(NBTHelper.MOB_MAX_HEALTH);
-			
-			tooltip.add(TinyMobFarm.translatable("tooltip.release_mob.key", ChatFormatting.GRAY));
-			tooltip.add(TinyMobFarm.translatable("tooltip.mob_name.key", ChatFormatting.GRAY, getMobName(stack)));
-			tooltip.add(TinyMobFarm.translatable("tooltip.mob_id.key", ChatFormatting.GRAY, id));
-			tooltip.add(TinyMobFarm.translatable("tooltip.health.key", ChatFormatting.GRAY, health, maxHealth));
-			if (nbt.getBoolean(NBTHelper.MOB_HOSTILE)) {
-				tooltip.add(TinyMobFarm.translatable("tooltip.hostile.key", ChatFormatting.GRAY));
-			}
-		} else {
-			tooltip.add(TinyMobFarm.translatable("tooltip.capture.key", ChatFormatting.GRAY));
-		}
-	}
-	
-	@Override
-	public boolean isFoil(ItemStack stack) {
-		return NBTHelper.hasMob(stack);
-	}
-
-	public Component getMobName(ItemStack itemStack) {
-		CompoundTag nbt = NBTHelper.getBaseTag(itemStack);
-		return TinyMobFarm.literal(nbt.getString(NBTHelper.MOB_NAME));
-	}
+    public Component getMobName(ItemStack itemStack) {
+        if (!itemStack.has(TinyMobFarm.LASSO_DATA.get())) return TinyMobFarm.translatable("tooltip.unknown.key");
+        return TinyMobFarm.literal(itemStack.get(TinyMobFarm.LASSO_DATA.get()).mobName());
+    }
 }

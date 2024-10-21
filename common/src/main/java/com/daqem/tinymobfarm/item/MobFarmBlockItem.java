@@ -25,10 +25,9 @@ public class MobFarmBlockItem extends BlockItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag tooltipFlag) {
-		if (Screen.hasShiftDown()) this.tooltipBuilder.accept(tooltip);
-		else tooltip.add(TinyMobFarm.translatable("tooltip.hold_shift", ChatFormatting.GRAY));
-
-		super.appendHoverText(stack, level, tooltip, tooltipFlag);
+	public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+		if (Screen.hasShiftDown()) this.tooltipBuilder.accept(list);
+		else list.add(TinyMobFarm.translatable("tooltip.hold_shift", ChatFormatting.GRAY));
+		super.appendHoverText(itemStack, tooltipContext, list, tooltipFlag);
 	}
 }

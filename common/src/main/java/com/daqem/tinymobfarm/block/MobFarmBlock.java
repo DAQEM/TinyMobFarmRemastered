@@ -1,16 +1,19 @@
 package com.daqem.tinymobfarm.block;
 
 import java.util.List;
+import java.util.function.Function;
 
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.blockentity.MobFarmBlockEntity;
 import com.daqem.tinymobfarm.MobFarmType;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,16 +47,21 @@ public class MobFarmBlock extends BaseEntityBlock {
 	
 	private static final VoxelShape BOUNDING_BOX = Block.box(1, 0, 1, 15, 14, 15);
 
-	private final MobFarmType mobFarmData;
-	
-	public MobFarmBlock(MobFarmType mobFarmData) {
-		super(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops().strength(1.5f, 6.0f));
+	private final MobFarmType mobFarmType;
+
+	public MobFarmBlock(MobFarmType mobFarmType) {
+		super(BlockBehaviour.Properties.of()
+				.mapColor(MapColor.STONE)
+				.instrument(NoteBlockInstrument.BASEDRUM)
+				.requiresCorrectToolForDrops()
+				.strength(1.5f, 6.0f));
+
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-		this.mobFarmData = mobFarmData;
+		this.mobFarmType = mobFarmType;
 	}
 	
 	public Consumer<List<Component>> getTooltipBuilder() {
-		return this.mobFarmData::addTooltip;
+		return this.mobFarmType::addTooltip;
 	}
 
 	@Override
@@ -74,25 +82,23 @@ public class MobFarmBlock extends BaseEntityBlock {
 
 		BlockEntity tileEntity = level.getBlockEntity(pos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
-			mobFarmBlockEntity.setMobFarmData(mobFarmData);
+			mobFarmBlockEntity.setMobFarmData(mobFarmType);
 			mobFarmBlockEntity.updateRedstone();
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
-	public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-		if (level.isClientSide()) return InteractionResult.SUCCESS;
+	protected @NotNull ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+		if (level.isClientSide()) return ItemInteractionResult.SUCCESS;
 
-		BlockEntity tileEntity = level.getBlockEntity(pos);
+		BlockEntity tileEntity = level.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
-            player.openMenu(mobFarmBlockEntity);
+			player.openMenu(mobFarmBlockEntity);
 		}
 
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
 		BlockEntity tileEntity = levelAccessor.getBlockEntity(blockPos);
@@ -103,7 +109,6 @@ public class MobFarmBlock extends BaseEntityBlock {
 		return blockState;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
 		BlockEntity tileEntity = level.getBlockEntity(blockPos);
@@ -114,7 +119,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+	public void playerDestroy(Level level, Player player, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, ItemStack itemStack) {
 		BlockEntity tileEntity = level.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
 			ItemStack lasso = mobFarmBlockEntity.getLasso();
@@ -123,11 +128,9 @@ public class MobFarmBlock extends BaseEntityBlock {
 				level.addFreshEntity(drop);
 			}
 		}
-		super.playerWillDestroy(level, blockPos, blockState, player);
-
+		super.playerDestroy(level, player, blockPos, blockState, blockEntity, itemStack);
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
 		return BOUNDING_BOX;
@@ -138,7 +141,6 @@ public class MobFarmBlock extends BaseEntityBlock {
 		return true;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public int getLightBlock(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
 		return 0;
@@ -154,6 +156,15 @@ public class MobFarmBlock extends BaseEntityBlock {
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
 		return MobFarmBlock.createTickerHelper(blockEntityType, TinyMobFarm.MOB_FARM_TILE_ENTITY.get(), MobFarmBlockEntity::tick);
+	}
+
+	@Override
+	protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+		return MobFarmBlock.simpleCodecWithMobFarmType(MobFarmBlock::new, mobFarmType);
+	}
+
+	public static <B extends Block> MapCodec<B> simpleCodecWithMobFarmType(Function<MobFarmType, B> function, MobFarmType mobFarmType) {
+		return RecordCodecBuilder.mapCodec(instance -> instance.group(BlockBehaviour.propertiesCodec()).apply(instance, properties1 -> function.apply(mobFarmType)));
 	}
 
 	@Override

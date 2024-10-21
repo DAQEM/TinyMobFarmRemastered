@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.daqem.tinymobfarm.ConfigTinyMobFarm;
-import com.daqem.tinymobfarm.TinyMobFarm;
-import com.daqem.tinymobfarm.util.NBTHelper;
+import com.daqem.tinymobfarm.item.component.LassoData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -61,7 +59,7 @@ public enum MobFarmType {
 	}
 	
 	public boolean isLassoValid(ItemStack lasso) {
-		return NBTHelper.hasMob(lasso) && (this.canFarmHostile || !NBTHelper.hasHostileMob(lasso));
+		return lasso.has(TinyMobFarm.LASSO_DATA.get()) && (this.canFarmHostile || !lasso.get(TinyMobFarm.LASSO_DATA.get()).mobHostile());
 	}
 	
 	public int getMaxProgress() {

@@ -7,11 +7,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Matrix4fStack;
 
 import java.util.function.Supplier;
 
@@ -52,9 +54,9 @@ public class EntityComponent extends AbstractComponent<EntityComponent> {
                 getTotalX() + getWidth(),
                 getTotalY() + getHeight()
         );
-        PoseStack modelViewStack = RenderSystem.getModelViewStack();
-        modelViewStack.pushPose();
-        modelViewStack.mulPoseMatrix(guiGraphics.pose().last().pose());
+        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushMatrix();
+        modelViewStack.mul(guiGraphics.pose().last().pose());
         modelViewStack.translate(x, y, 50.0F);
         modelViewStack.scale((float) -scale, (float) scale, (float) scale);
         PoseStack mobPoseStack = new PoseStack();
@@ -77,7 +79,7 @@ public class EntityComponent extends AbstractComponent<EntityComponent> {
         entityRenderDispatcher.render(livingEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, mobPoseStack, bufferSource, 15728880);
         bufferSource.endBatch();
         entityRenderDispatcher.setRenderShadow(true);
-        modelViewStack.popPose();
+        modelViewStack.popMatrix();
         RenderSystem.applyModelViewMatrix();
         guiGraphics.disableScissor();
     }
