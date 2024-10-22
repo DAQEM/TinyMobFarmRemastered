@@ -6,20 +6,20 @@
 		"CSC"
 	],
 	"key": {
-		"B": [{
+		"B": {
 			"item": "tinymobfarm:emerald_farm"
-		}],
-		"M": [{
+		},
+		"M": {
 			"item": "minecraft:nether_star"
-		}],
-		"C": [{
+		},
+		"C": {
 			"item": "minecraft:dragon_breath"
-		}],
-		"S": [{
+		},
+		"S": {
 			"item": "minecraft:chorus_flower"
-		}]
+		}
 	},
 	"result": {
-		"item": "tinymobfarm:inferno_farm"
+		"id": "tinymobfarm:inferno_farm"
 	}
 }

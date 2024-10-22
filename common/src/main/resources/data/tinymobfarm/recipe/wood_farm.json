@@ -6,26 +6,26 @@
 		"SWS"
 	],
 	"key": {
-		"S": [{
+		"S": {
 			"item": "minecraft:bookshelf"
-		}],
-		"M": [{
+		},
+		"M": {
 			"item": "minecraft:glass"
-		}],
-		"R": [{
+		},
+		"R": {
 			"item": "minecraft:rotten_flesh"
-		}],
-		"B": [{
+		},
+		"B": {
 			"item": "minecraft:bone"
-		}],
-		"G": [{
+		},
+		"G": {
 			"item": "minecraft:gunpowder"
-		}],
-		"W": [{
+		},
+		"W": {
 			"item": "minecraft:string"
-		}]
+		}
 	},
 	"result": {
-		"item": "tinymobfarm:wood_farm"
+		"id": "tinymobfarm:wood_farm"
 	}
 }
