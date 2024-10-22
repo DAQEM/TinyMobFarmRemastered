@@ -6,20 +6,20 @@
 		"CSC"
 	],
 	"key": {
-		"B": [{
+		"B": {
 			"item": "tinymobfarm:stone_farm"
-		}],
-		"M": [{
+		},
+		"M": {
 			"item": "minecraft:obsidian"
-		}],
-		"C": [{
+		},
+		"C": {
 			"item": "minecraft:blaze_rod"
-		}],
-		"S": [{
+		},
+		"S": {
 			"item": "minecraft:iron_block"
-		}]
+		}
 	},
 	"result": {
-		"item": "tinymobfarm:iron_farm"
+		"id": "tinymobfarm:iron_farm"
 	}
 }
