@@ -33,7 +33,7 @@ ordering = "AFTER"
 side = "BOTH"
 
 [[dependencies."${mod_id}"]]
-modId = "supermartijn642configlib"
+modId = "yamlconfig"
 type = "required"
 versionRange = "[${config_library_version},)"
 ordering = "AFTER"

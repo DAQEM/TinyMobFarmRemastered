@@ -1,67 +1,75 @@
 package com.daqem.tinymobfarm;
 
-import com.supermartijn642.configlib.api.ConfigBuilders;
-import com.supermartijn642.configlib.api.IConfigBuilder;
-
-import java.util.function.Supplier;
+import com.daqem.yamlconfig.api.config.ConfigExtension;
+import com.daqem.yamlconfig.api.config.ConfigType;
+import com.daqem.yamlconfig.api.config.IConfigBuilder;
+import com.daqem.yamlconfig.api.config.entry.IConfigEntry;
+import com.daqem.yamlconfig.impl.config.ConfigBuilder;
 
 public class ConfigTinyMobFarm {
 
-	public static final Supplier<Integer> lassoDurability;
-	public static final Supplier<Boolean> allowLassoLooting;
+	public static final IConfigEntry<Integer> lassoDurability;
+	public static final IConfigEntry<Boolean> allowLassoLooting;
 
-	public static final Supplier<Double> woodFarmSpeed;
-	public static final Supplier<Double> stoneFarmSpeed;
-	public static final Supplier<Double> ironFarmSpeed;
-	public static final Supplier<Double> goldFarmSpeed;
-	public static final Supplier<Double> diamondFarmSpeed;
-	public static final Supplier<Double> emeraldFarmSpeed;
-	public static final Supplier<Double> infernoFarmSpeed;
-	public static final Supplier<Double> ultimateFarmSpeed;
+	public static final IConfigEntry<Double> woodFarmSpeed;
+	public static final IConfigEntry<Double> stoneFarmSpeed;
+	public static final IConfigEntry<Double> ironFarmSpeed;
+	public static final IConfigEntry<Double> goldFarmSpeed;
+	public static final IConfigEntry<Double> diamondFarmSpeed;
+	public static final IConfigEntry<Double> emeraldFarmSpeed;
+	public static final IConfigEntry<Double> infernoFarmSpeed;
+	public static final IConfigEntry<Double> ultimateFarmSpeed;
 
 	static {
-		IConfigBuilder config = ConfigBuilders.newTomlConfig(TinyMobFarm.MOD_ID, null, false);
+		IConfigBuilder config = new ConfigBuilder(TinyMobFarm.MOD_ID, TinyMobFarm.MOD_ID + "_common", ConfigExtension.YAML, ConfigType.COMMON);
+
+		config.push("lasso");
 
 		lassoDurability = config
-				.comment("The durability of the lasso.")
-				.define("Lasso Durability", 256, 1, Integer.MAX_VALUE);
+				.defineInteger("lassoDurability", 256, 1, Integer.MAX_VALUE)
+				.withComments("The durability of the lasso.");
 
 		allowLassoLooting = config
-				.comment("Whether the looting enchantment will be taken into consideration when generating mob loot.")
-				.define("Allow Lasso Looting", true);
+				.defineBoolean("allowLassoLooting", true)
+				.withComments("Whether the looting enchantment will be taken into consideration when generating mob loot.");
+
+		config.pop();
+
+		config.push("farms");
 
 		woodFarmSpeed = config
-				.comment("The speed of the wood farm.")
-				.define("Wood Farm Speed", 50.0, 0.001, Double.MAX_VALUE);
+				.defineDouble("woodFarmSpeed", 50.0, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the wood farm.");
 
 		stoneFarmSpeed = config
-				.comment("The speed of the stone farm.")
-				.define("Stone Farm Speed", 40.0, 0.001, Double.MAX_VALUE);
+				.defineDouble("stoneFarmSpeed", 40.0, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the stone farm.");
 
 		ironFarmSpeed = config
-				.comment("The speed of the iron farm.")
-				.define("Iron Farm Speed", 30.0, 0.001, Double.MAX_VALUE);
+				.defineDouble("ironFarmSpeed", 30.0, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the iron farm.");
 
 		goldFarmSpeed = config
-				.comment("The speed of the gold farm.")
-				.define("Gold Farm Speed", 20.0, 0.001, Double.MAX_VALUE);
+				.defineDouble("goldFarmSpeed", 20.0, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the gold farm.");
 
 		diamondFarmSpeed = config
-				.comment("The speed of the diamond farm.")
-				.define("Diamond Farm Speed", 10.0, 0.001, Double.MAX_VALUE);
+				.defineDouble("diamondFarmSpeed", 10.0, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the diamond farm.");
 
 		emeraldFarmSpeed = config
-				.comment("The speed of the emerald farm.")
-				.define("Emerald Farm Speed", 5.0, 0.001, Double.MAX_VALUE);
+				.defineDouble("emeraldFarmSpeed", 5.0, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the emerald farm.");
 
 		infernoFarmSpeed = config
-				.comment("The speed of the inferno farm.")
-				.define("Inferno Farm Speed", 2.5, 0.001, Double.MAX_VALUE);
+				.defineDouble("infernoFarmSpeed", 2.5, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the inferno farm.");
 
 		ultimateFarmSpeed = config
-				.comment("The speed of the ultimate farm.")
-				.define("Ultimate Farm Speed", 0.5, 0.001, Double.MAX_VALUE);
+				.defineDouble("ultimateFarmSpeed", 0.5, 0.001, Double.MAX_VALUE)
+				.withComments("The speed of the ultimate farm.");
 
+		config.pop();
 
 		config.build();
 	}
