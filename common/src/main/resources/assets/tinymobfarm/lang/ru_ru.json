@@ -32,5 +32,20 @@
 	"tinymobfarm.tooltip.durability_info": "Потеря прочности лассо:",
 	"tinymobfarm.tooltip.no_hostile": "Не может фармить враждебных мобов.",
 	"tinymobfarm.tooltip.no_durability": "- %d%% шанс не потерять прочность",
-	"tinymobfarm.tooltip.default_durability": "- %d%% вероятность потери %d прочность"
+	"tinymobfarm.tooltip.default_durability": "- %d%% вероятность потери %d прочность",
+
+	"yamlconfig.tinymobfarm": "Мини-Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common": "Общие настройки",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso": "Настройки лассо",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso.lassoDurability": "Прочность лассо",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso.allowLassoLooting": "Разрешить добычу с помощью лассо",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms": "Настройки ферм",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.woodFarmSpeed": "Скорость Деревянной Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.stoneFarmSpeed": "Скорость Каменной Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.ironFarmSpeed": "Скорость Железной Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.goldFarmSpeed": "Скорость Золотой Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.diamondFarmSpeed": "Скорость Алмазной Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.emeraldFarmSpeed": "Скорость Изумрудной Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.infernoFarmSpeed": "Скорость Адской Мобофермы",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.ultimateFarmSpeed": "Скорость Мобофермы Края"
 }

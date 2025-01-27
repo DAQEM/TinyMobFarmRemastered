@@ -33,5 +33,20 @@
 	"tinymobfarm.tooltip.no_hostile": "Cannot farm hostile mobs.",
 	"tinymobfarm.tooltip.no_durability": "- %d%% chance to loss no durability",
 	"tinymobfarm.tooltip.default_durability": "- %d%% chance to loss %d durability",
-	"tinymobfarm.tooltip.unknown.key": "Unknown"
+	"tinymobfarm.tooltip.unknown.key": "Unknown",
+
+	"yamlconfig.tinymobfarm": "Tiny Mob Farm",
+	"yamlconfig.tinymobfarm.tinymobfarm_common": "Common Configurations",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso": "Lasso Configuration",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso.lassoDurability": "Lasso Durability",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso.allowLassoLooting": "Allow Lasso Looting",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms": "Farms Configuration",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.woodFarmSpeed": "Wooden Farm Speed",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.stoneFarmSpeed": "Stone Farm Speed",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.ironFarmSpeed": "Iron Farm Speed",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.goldFarmSpeed": "Golden Farm Speed",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.diamondFarmSpeed": "Diamond Farm Speed",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.emeraldFarmSpeed": "Emerald Farm Speed",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.infernoFarmSpeed": "Inferno Farm Speed",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.ultimateFarmSpeed": "Ultimate Farm Speed"
 }

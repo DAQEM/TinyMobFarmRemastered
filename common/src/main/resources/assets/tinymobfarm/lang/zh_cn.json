@@ -32,5 +32,20 @@
 	"tinymobfarm.tooltip.durability_info": "对套索造成的磨损：",
 	"tinymobfarm.tooltip.no_hostile": "无法刷有攻击性的生物",
 	"tinymobfarm.tooltip.no_durability": "- %d%%几率不损失耐久",
-	"tinymobfarm.tooltip.default_durability": "- %d%%几率损失%d点耐久"
+	"tinymobfarm.tooltip.default_durability": "- %d%%几率损失%d点耐久",
+
+	"yamlconfig.tinymobfarm": "迷你刷怪场",
+	"yamlconfig.tinymobfarm.tinymobfarm_common": "常规配置",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso": "套索配置",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso.lassoDurability": "套索耐久度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.lasso.allowLassoLooting": "允许套索掠夺",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms": "刷怪场配置",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.woodFarmSpeed": "木质刷怪场速度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.stoneFarmSpeed": "石质刷怪场速度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.ironFarmSpeed": "铁质刷怪场速度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.goldFarmSpeed": "金质刷怪场速度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.diamondFarmSpeed": "钻石刷怪场速度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.emeraldFarmSpeed": "绿宝石刷怪场速度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.infernoFarmSpeed": "熔岩刷怪场速度",
+	"yamlconfig.tinymobfarm.tinymobfarm_common.farms.ultimateFarmSpeed": "末影刷怪场速度"
 }
