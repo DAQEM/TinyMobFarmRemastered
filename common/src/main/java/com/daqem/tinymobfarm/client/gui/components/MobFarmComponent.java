@@ -9,10 +9,8 @@ import com.daqem.uilib.client.gui.text.Text;
 import com.daqem.uilib.client.gui.text.TruncatedText;
 import com.daqem.uilib.client.gui.texture.Texture;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -30,8 +28,6 @@ public class MobFarmComponent extends TextureComponent {
     private final Font font;
 
     private TextComponent errorText;
-    private TextComponent titleComponent;
-    private EntityComponent entityComponent;
     private TextComponent entityNameComponent;
     private ProgressBarComponent progressBarComponent;
 
@@ -49,15 +45,15 @@ public class MobFarmComponent extends TextureComponent {
         this.errorText = new TextComponent(70, 67, new Text(this.font, Component.empty()));
         this.errorText.setScale(0.75F);
         Text titleText = new Text(this.font, parent.getTitle());
-        this.titleComponent = new TextComponent(8, 5, titleText);
-        this.entityComponent = new EntityComponent(8, 15, 52, 63, parent::getLasso);
+        TextComponent titleComponent = new TextComponent(8, 5, titleText);
+        EntityComponent entityComponent = new EntityComponent(8, 15, 52, 63, parent::getLasso);
         Text entityName = new Text(this.font, Component.empty());
         this.entityNameComponent = new TextComponent(90, 37, entityName);
         this.progressBarComponent = new ProgressBarComponent(71, 55, 97, 5, 0xFF3de031, parent.getMenu().getProgress(), parent.getMenu().getMaxProgress());
 
         titleText.setTextColor(0x404040);
 
-        this.addChildren(this.errorText, this.titleComponent, this.entityComponent, this.entityNameComponent, this.progressBarComponent);
+        this.addChildren(this.errorText, titleComponent, entityComponent, this.entityNameComponent, this.progressBarComponent);
     }
 
     @Override
@@ -69,8 +65,8 @@ public class MobFarmComponent extends TextureComponent {
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.render(graphics, mouseX, mouseY, delta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
+        super.render(graphics, mouseX, mouseY, delta, color);
         TruncatedText entityText = new TruncatedText(this.font,
                 parent.getLasso().getItem() instanceof LassoItem lassoItem ?
                         lassoItem.getMobName(parent.getLasso()) :

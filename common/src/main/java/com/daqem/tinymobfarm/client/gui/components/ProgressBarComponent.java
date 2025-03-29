@@ -18,7 +18,7 @@ public class ProgressBarComponent extends AbstractComponent<SolidColorComponent>
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int theColor) {
         graphics.fill(0, 0, (int) (getWidth() * getProgressPercentage()), getHeight(), color);
     }
 

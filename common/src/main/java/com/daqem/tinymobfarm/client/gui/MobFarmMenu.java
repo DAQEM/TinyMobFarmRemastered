@@ -68,7 +68,7 @@ public class MobFarmMenu extends AbstractContainerMenu {
 		ItemStack originalItemStack = slot.getItem();
 		ItemStack copiedItemStack = originalItemStack.copy();
 
-		int containerSlots = slots.size() - player.getInventory().items.size();
+		int containerSlots = slots.size() - player.getInventory().getNonEquipmentItems().size();
 		boolean moved = index < containerSlots
 				? this.moveItemStackTo(originalItemStack, containerSlots, slots.size(), true)
 				: this.moveItemStackTo(originalItemStack, 0, containerSlots, false);

@@ -1,27 +1,28 @@
 package com.daqem.tinymobfarm.block;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.blockentity.MobFarmBlockEntity;
 import com.daqem.tinymobfarm.MobFarmType;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue.Consumer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -32,9 +33,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -42,15 +44,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MobFarmBlock extends BaseEntityBlock {
-	
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-	
+
+	public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
+
 	private static final VoxelShape BOUNDING_BOX = Block.box(1, 0, 1, 15, 14, 15);
 
 	private final MobFarmType mobFarmType;
 
-	public MobFarmBlock(MobFarmType mobFarmType) {
-		super(BlockBehaviour.Properties.of()
+	public MobFarmBlock(MobFarmType mobFarmType, BlockBehaviour.Properties properties) {
+		super(properties
 				.mapColor(MapColor.STONE)
 				.instrument(NoteBlockInstrument.BASEDRUM)
 				.requiresCorrectToolForDrops()
@@ -59,9 +61,9 @@ public class MobFarmBlock extends BaseEntityBlock {
 		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
 		this.mobFarmType = mobFarmType;
 	}
-	
-	public Consumer<List<Component>> getTooltipBuilder() {
-		return this.mobFarmType::addTooltip;
+
+	public void getTooltipBuilder(Consumer<Component> consumer) {
+		this.mobFarmType.addTooltip(consumer);
 	}
 
 	@Override
@@ -88,29 +90,29 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	protected @NotNull ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
-		if (level.isClientSide()) return ItemInteractionResult.SUCCESS;
+	protected @NotNull InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+		if (level.isClientSide()) return InteractionResult.SUCCESS;
 
 		BlockEntity tileEntity = level.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
 			player.openMenu(mobFarmBlockEntity);
 		}
 
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState blockState2, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos blockPos2) {
-		BlockEntity tileEntity = levelAccessor.getBlockEntity(blockPos);
+	protected @NotNull BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+		BlockEntity tileEntity = levelReader.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
-            mobFarmBlockEntity.updateRedstone();
+			mobFarmBlockEntity.updateRedstone();
 			mobFarmBlockEntity.saveAndSync();
 		}
 		return blockState;
 	}
 
 	@Override
-	public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos blockPos2, boolean bl) {
+	protected void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, @Nullable Orientation orientation, boolean bl) {
 		BlockEntity tileEntity = level.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
 			mobFarmBlockEntity.updateRedstone();
@@ -137,12 +139,12 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+	protected boolean propagatesSkylightDown(BlockState blockState) {
 		return true;
 	}
 
 	@Override
-	public int getLightBlock(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+	protected int getLightBlock(BlockState blockState) {
 		return 0;
 	}
 
@@ -160,7 +162,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 
 	@Override
 	protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
-		return MobFarmBlock.simpleCodecWithMobFarmType(MobFarmBlock::new, mobFarmType);
+		return MobFarmBlock.simpleCodecWithMobFarmType(x -> new MobFarmBlock(x, BlockBehaviour.Properties.of()), mobFarmType);
 	}
 
 	public static <B extends Block> MapCodec<B> simpleCodecWithMobFarmType(Function<MobFarmType, B> function, MobFarmType mobFarmType) {

@@ -6,18 +6,10 @@
 		"CSC"
 	],
 	"key": {
-		"B": {
-			"item": "tinymobfarm:gold_farm"
-		},
-		"M": {
-			"item": "minecraft:ender_eye"
-		},
-		"C": {
-			"item": "minecraft:ghast_tear"
-		},
-		"S": {
-			"item": "minecraft:diamond_block"
-		}
+		"B": "tinymobfarm:gold_farm",
+		"M": "minecraft:ender_eye",
+		"C": "minecraft:ghast_tear",
+		"S": "minecraft:diamond_block"
 	},
 	"result": {
 		"id": "tinymobfarm:diamond_farm"

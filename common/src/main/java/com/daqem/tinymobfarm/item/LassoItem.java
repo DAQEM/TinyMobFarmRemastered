@@ -23,18 +23,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.function.Consumer;
 
 public class LassoItem extends Item {
 
     public LassoItem(Properties properties) {
         //noinspection UnstableApiUsage
         super(properties
-                .arch$tab(TinyMobFarm.JOBSPLUS_TOOLS_TAB)
+                .arch$tab(TinyMobFarm.TINY_MOB_FARM_TAB)
                 .durability(ConfigTinyMobFarm.lassoDurability.get()));
     }
 
@@ -45,9 +46,9 @@ public class LassoItem extends Item {
             return InteractionResult.FAIL;
         }
 
-        if (player.level() instanceof ServerLevel serverLevel) {
+        if (player instanceof ServerPlayer serverPlayer) {
             if (!target.canUsePortal(false)) {
-                player.sendSystemMessage(TinyMobFarm.translatable("error.cannot_capture_boss"));
+                serverPlayer.sendSystemMessage(TinyMobFarm.translatable("error.cannot_capture_boss"));
                 return InteractionResult.SUCCESS;
             }
             CompoundTag mobData = target.saveWithoutId(new CompoundTag());
@@ -65,7 +66,7 @@ public class LassoItem extends Item {
                     target.getHealth(),
                     target.getMaxHealth(),
                     target instanceof Monster,
-                    target.getLootTable().location()
+                    target.getLootTable().get().location()
             );
 
             stack.set(TinyMobFarm.LASSO_DATA.get(), lassoData);
@@ -103,18 +104,18 @@ public class LassoItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
         if (itemStack.has(TinyMobFarm.LASSO_DATA.get())) {
             LassoData data = itemStack.get(TinyMobFarm.LASSO_DATA.get());
-            list.add(TinyMobFarm.translatable("tooltip.release_mob.key", ChatFormatting.GRAY));
-            list.add(TinyMobFarm.translatable("tooltip.mob_name.key", ChatFormatting.GRAY, getMobName(itemStack)));
-            list.add(TinyMobFarm.translatable("tooltip.mob_id.key", ChatFormatting.GRAY, data.mobId().toString()));
-            list.add(TinyMobFarm.translatable("tooltip.health.key", ChatFormatting.GRAY, data.mobHealth(), data.mobMaxHealth()));
+            consumer.accept(TinyMobFarm.translatable("tooltip.release_mob.key", ChatFormatting.GRAY));
+            consumer.accept(TinyMobFarm.translatable("tooltip.mob_name.key", ChatFormatting.GRAY, getMobName(itemStack)));
+            consumer.accept(TinyMobFarm.translatable("tooltip.mob_id.key", ChatFormatting.GRAY, data.mobId().toString()));
+            consumer.accept(TinyMobFarm.translatable("tooltip.health.key", ChatFormatting.GRAY, data.mobHealth(), data.mobMaxHealth()));
             if (data.mobHostile()) {
-                list.add(TinyMobFarm.translatable("tooltip.hostile.key", ChatFormatting.GRAY));
+                consumer.accept(TinyMobFarm.translatable("tooltip.hostile.key", ChatFormatting.GRAY));
             }
         } else {
-            list.add(TinyMobFarm.translatable("tooltip.capture.key", ChatFormatting.GRAY));
+            consumer.accept(TinyMobFarm.translatable("tooltip.capture.key", ChatFormatting.GRAY));
         }
     }
 

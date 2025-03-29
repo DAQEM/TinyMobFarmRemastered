@@ -6,18 +6,10 @@
 		"CSC"
 	],
 	"key": {
-		"B": {
-			"item": "tinymobfarm:diamond_farm"
-		},
-		"M": {
-			"item": "minecraft:ghast_tear"
-		},
-		"C": {
-			"item": "minecraft:nether_star"
-		},
-		"S": {
-			"item": "minecraft:emerald_block"
-		}
+		"B": "tinymobfarm:diamond_farm",
+		"M": "minecraft:ghast_tear",
+		"C": "minecraft:nether_star",
+		"S": "minecraft:emerald_block"
 	},
 	"result": {
 		"id": "tinymobfarm:emerald_farm"

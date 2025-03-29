@@ -18,6 +18,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -39,7 +40,7 @@ public class EntityHelper {
         Entity entity = getEntityFromLasso(stack, BlockPos.ZERO, level);
         if (entity == null) return new ArrayList<>();
 
-        ResourceKey<LootTable> lootTableKey = entity.getType().getDefaultLootTable();
+        ResourceKey<LootTable> lootTableKey = entity.getType().getDefaultLootTable().get();
         LootTable lootTable = level.getServer().reloadableRegistries().getLootTable(lootTableKey);
 
         ServerPlayer daniel = FakePlayerHelper.getPlayer(level);
@@ -95,6 +96,6 @@ public class EntityHelper {
         mobData.put("Pos", mobPos);
         mobData.putString("id", id.toString());
 
-        return EntityType.loadEntityRecursive(mobData, level, entity -> entity);
+        return EntityType.loadEntityRecursive(mobData, level, EntitySpawnReason.MOB_SUMMONED, entity -> entity);
     }
 }
