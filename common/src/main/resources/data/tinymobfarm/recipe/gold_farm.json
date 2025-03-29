@@ -6,18 +6,10 @@
 		"CSC"
 	],
 	"key": {
-		"B": {
-			"item": "tinymobfarm:iron_farm"
-		},
-		"M": {
-			"item": "minecraft:blaze_rod"
-		},
-		"C": {
-			"item": "minecraft:ender_eye"
-		},
-		"S": {
-			"item": "minecraft:gold_block"
-		}
+		"B": "tinymobfarm:iron_farm",
+		"M": "minecraft:blaze_rod",
+		"C": "minecraft:ender_eye",
+		"S": "minecraft:gold_block"
 	},
 	"result": {
 		"id": "tinymobfarm:gold_farm"

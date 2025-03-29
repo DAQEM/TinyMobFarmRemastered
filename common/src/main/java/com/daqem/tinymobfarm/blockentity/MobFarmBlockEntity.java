@@ -15,13 +15,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -165,7 +165,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
                     if (this.livingEntity == null || !this.livingEntity.getName().getContents().equals(mobName)) {
                         CompoundTag entityData = data.mobData();
                         entityData.putString("id", mobId);
-                        Entity newModel = EntityType.loadEntityRecursive(entityData, this.level, entity -> entity);
+                        Entity newModel = EntityType.loadEntityRecursive(entityData, this.level, EntitySpawnReason.COMMAND, entity -> entity);
 
                         if (newModel instanceof LivingEntity) {
                             this.livingEntity = (LivingEntity) newModel;
@@ -188,7 +188,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     }
 
     public ItemStack getLasso() {
-        return this.items.get(0);
+        return this.items.getFirst();
     }
 
     public void setMobFarmData(MobFarmType mobFarmData) {
@@ -217,8 +217,8 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     @Override
     protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
         super.loadAdditional(compoundTag, provider);
-        this.mobFarmData = MobFarmType.values()[compoundTag.getInt(MOB_FARM_DATA)];
-        this.progress = compoundTag.getInt(CURR_PROGRESS);
+        compoundTag.getInt(MOB_FARM_DATA).ifPresent(value -> this.mobFarmData = MobFarmType.values()[value]);
+        compoundTag.getInt(CURR_PROGRESS).ifPresent(value -> this.progress = value);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(compoundTag, this.items, provider);
         this.shouldUpdate = true;

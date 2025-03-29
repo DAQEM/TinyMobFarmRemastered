@@ -2,17 +2,10 @@ package com.daqem.tinymobfarm.client.gui;
 
 import com.daqem.tinymobfarm.MobFarmType;
 import com.daqem.tinymobfarm.client.gui.components.MobFarmComponent;
-import com.daqem.tinymobfarm.util.EntityHelper;
 import com.daqem.uilib.client.gui.AbstractContainerScreen;
-import com.daqem.uilib.client.gui.background.Backgrounds;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +42,7 @@ public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
 	}
 
 	public ItemStack getLasso() {
-		return this.menu.slots.get(0).getItem();
+		return this.menu.slots.getFirst().getItem();
 	}
 
 	public @Nullable MobFarmType getType() {

@@ -6,19 +6,10 @@
 		"CSC"
 	],
 	"key": {
-		"B": {
-			"item": "tinymobfarm:wood_farm"
-		},
-		"M": {
-			"item": "minecraft:bookshelf"
-		},
-		"C": {
-			"item": "minecraft:stone",
-			"data": 0
-		},
-		"S": {
-			"item": "minecraft:obsidian"
-		}
+		"B": "tinymobfarm:wood_farm",
+		"M": "minecraft:bookshelf",
+		"C": "minecraft:stone",
+		"S": "minecraft:obsidian"
 	},
 	"result": {
 		"id": "tinymobfarm:stone_farm"

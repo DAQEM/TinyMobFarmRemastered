@@ -6,19 +6,10 @@
 		"CSC"
 	],
 	"key": {
-		"B": {
-			"item": "tinymobfarm:inferno_farm"
-		},
-		"M": {
-			"item": "minecraft:dragon_breath"
-		},
-		"C": {
-			"item": "minecraft:shulker_box",
-			"data": 0
-		},
-		"S": {
-			"item": "minecraft:elytra"
-		}
+		"B": "tinymobfarm:inferno_farm",
+		"M": "minecraft:dragon_breath",
+		"C": "minecraft:shulker_box",
+		"S": "minecraft:elytra"
 	},
 	"result": {
 		"id": "tinymobfarm:ultimate_farm"

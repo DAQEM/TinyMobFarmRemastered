@@ -6,15 +6,9 @@
 		" S "
 	],
 	"key": {
-		"L": {
-			"item": "minecraft:lead"
-		},
-		"D": {
-			"item": "minecraft:diamond"
-		},
-		"S": {
-			"item": "minecraft:slime_ball"
-		}
+		"L": "minecraft:lead",
+		"D": "minecraft:diamond",
+		"S": "minecraft:slime_ball"
 	},
 	"result": {
 		"id": "tinymobfarm:lasso"
