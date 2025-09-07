@@ -7,12 +7,10 @@ import com.daqem.tinymobfarm.util.EntityHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.DoubleTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -26,6 +24,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -36,6 +36,7 @@ public class LassoItem extends Item {
         //noinspection UnstableApiUsage
         super(properties
                 .arch$tab(TinyMobFarm.TINY_MOB_FARM_TAB)
+                .enchantable(1)
                 .durability(ConfigTinyMobFarm.lassoDurability.get()));
     }
 
@@ -51,27 +52,28 @@ public class LassoItem extends Item {
                 serverPlayer.sendSystemMessage(TinyMobFarm.translatable("error.cannot_capture_boss"));
                 return InteractionResult.SUCCESS;
             }
-            CompoundTag mobData = target.saveWithoutId(new CompoundTag());
-            ListTag pos = new ListTag();
-            pos.add(DoubleTag.valueOf(target.getX()));
-            pos.add(DoubleTag.valueOf(target.getY()));
-            mobData.put("Rotation", pos);
-            mobData.remove("Fire");
-            mobData.remove("HurtTime");
+            try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(target.problemPath(), TinyMobFarm.LOGGER)) {
+                TagValueOutput mobData = TagValueOutput.createWithContext(scopedCollector, target.registryAccess());
+                target.saveWithoutId(mobData);
 
-            LassoData lassoData = new LassoData(
-                    target.getName().getString(),
-                    target.getType().arch$registryName(),
-                    mobData,
-                    target.getHealth(),
-                    target.getMaxHealth(),
-                    target instanceof Monster,
-                    target.getLootTable().get().location()
-            );
+                mobData.store("Rotation", Vec2.CODEC, new Vec2(target.getYRot(), target.getXRot()));
+                mobData.discard("Fire");
+                mobData.discard("HurtTime");
 
-            stack.set(TinyMobFarm.LASSO_DATA.get(), lassoData);
-            target.discard();
-            player.getInventory().setChanged();
+                LassoData lassoData = new LassoData(
+                        target.getName().getString(),
+                        target.getType().arch$registryName(),
+                        mobData.buildResult(),
+                        target.getHealth(),
+                        target.getMaxHealth(),
+                        target instanceof Monster,
+                        target.getLootTable().get().location()
+                );
+
+                stack.set(TinyMobFarm.LASSO_DATA.get(), lassoData);
+                target.discard();
+                player.getInventory().setChanged();
+            }
         }
 
         return InteractionResult.SUCCESS;
@@ -121,11 +123,12 @@ public class LassoItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return stack.has(TinyMobFarm.LASSO_DATA.get());
+        return stack.has(TinyMobFarm.LASSO_DATA.get()) || super.isFoil(stack);
     }
 
     public Component getMobName(ItemStack itemStack) {
         if (!itemStack.has(TinyMobFarm.LASSO_DATA.get())) return TinyMobFarm.translatable("tooltip.unknown.key");
         return TinyMobFarm.literal(itemStack.get(TinyMobFarm.LASSO_DATA.get()).mobName());
     }
+
 }

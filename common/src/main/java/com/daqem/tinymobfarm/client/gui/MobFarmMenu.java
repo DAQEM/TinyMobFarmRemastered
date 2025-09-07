@@ -1,5 +1,6 @@
 package com.daqem.tinymobfarm.client.gui;
 
+import com.daqem.tinymobfarm.MobFarmType;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.blockentity.MobFarmBlockEntity;
 import net.minecraft.world.Container;
@@ -12,6 +13,7 @@ import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class MobFarmMenu extends AbstractContainerMenu {
 
@@ -50,7 +52,7 @@ public class MobFarmMenu extends AbstractContainerMenu {
 	}
 
 	public MobFarmMenu(int i, Inventory inventory) {
-		this(i, inventory, new SimpleContainer(1), new SimpleContainerData(3));
+		this(i, inventory, new SimpleContainer(1), new SimpleContainerData(4));
 	}
 
 	@Override
@@ -99,12 +101,12 @@ public class MobFarmMenu extends AbstractContainerMenu {
 		return this.containerData.get(1);
 	}
 
-	public double getScaledProgress() {
-		if (this.getProgress() <= 0) return 0;
-		return this.getProgress() / (double) this.getMaxProgress();
-	}
-
 	public boolean isPowered() {
 		return this.containerData.get(2) > 0;
+	}
+
+	public @Nullable MobFarmType getMobFarmType() {
+		int ordinal = this.containerData.get(3);
+		return ordinal >= 0 && ordinal < MobFarmType.values().length ? MobFarmType.values()[ordinal] : null;
 	}
 }

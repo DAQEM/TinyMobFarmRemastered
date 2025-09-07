@@ -35,6 +35,8 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -61,6 +63,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
                 case 1 ->
                         MobFarmBlockEntity.this.mobFarmData == null ? 0 : MobFarmBlockEntity.this.mobFarmData.getMaxProgress();
                 case 2 -> MobFarmBlockEntity.this.powered ? 1 : 0;
+                case 3 -> MobFarmBlockEntity.this.mobFarmData.ordinal();
                 default -> 0;
             };
         }
@@ -75,7 +78,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     };
 
@@ -125,27 +128,48 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
 
             if (this.level instanceof ServerLevel serverLevel) {
                 List<ItemStack> drops = EntityHelper.generateLoot(serverLevel, lasso);
-                Direction direction = Direction.DOWN;
-                BlockEntity tileEntity = this.level.getBlockEntity(this.worldPosition.relative(direction));
-                if (tileEntity instanceof Container container) {
-                    if (!HopperBlockEntity.isFullContainer(container, direction)) {
-                        List<ItemStack> toRemove = new ArrayList<>();
-                        for (int i = 0; i < drops.size(); i++) {
-                            ItemStack drop = drops.get(i);
-                            ItemStack dropLeftOver = HopperBlockEntity.addItem(this, container, drop, direction);
-                            if (dropLeftOver.isEmpty()) {
-                                toRemove.add(drop);
-                            } else {
-                                drops.set(i, dropLeftOver);
+                Container container = HopperBlockEntity.getContainerAt(serverLevel, getBlockPos().relative(Direction.DOWN));
+                NonNullList<ItemStack> dummyContainer = NonNullList.withSize(27, ItemStack.EMPTY);
+
+                // Fill dummyContainer with drops
+                for (int i = 0; i < drops.size() && i < dummyContainer.size(); i++) {
+                    dummyContainer.set(i, drops.get(i).copy()); // Use copy to avoid modifying original drops
+                }
+
+                if (container != null && !HopperBlockEntity.isFullContainer(container, Direction.UP)) {
+                    // Try to insert all items into the container
+                    for (ItemStack itemStack : dummyContainer) {
+                        if (!itemStack.isEmpty()) {
+                            // Keep trying to add the item stack until it's either fully inserted or can't fit
+                            while (!itemStack.isEmpty()) {
+                                ItemStack singleItem = itemStack.copy();
+                                singleItem.setCount(1);
+                                ItemStack remainder = HopperBlockEntity.addItem(this, container, singleItem, Direction.UP);
+                                if (remainder.isEmpty()) {
+                                    // Item was successfully added, reduce count
+                                    itemStack.shrink(1);
+                                    container.setChanged();
+                                } else {
+                                    // Item couldn't be added, break to drop it
+                                    break;
+                                }
                             }
                         }
-                        drops.removeAll(toRemove);
                     }
                 }
 
-                for (ItemStack stack : drops) {
-                    ItemEntity entityItem = new ItemEntity(this.level, this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 1, this.worldPosition.getZ() + 0.5, stack);
-                    this.level.addFreshEntity(entityItem);
+                // Drop any remaining items that couldn't fit
+                for (ItemStack stack : dummyContainer) {
+                    if (!stack.isEmpty()) {
+                        ItemEntity entityItem = new ItemEntity(
+                                this.level,
+                                this.worldPosition.getX() + 0.5,
+                                this.worldPosition.getY() + 1,
+                                this.worldPosition.getZ() + 0.5,
+                                stack.copy()
+                        );
+                        this.level.addFreshEntity(entityItem);
+                    }
                 }
             }
         }
@@ -215,22 +239,22 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
-        compoundTag.getInt(MOB_FARM_DATA).ifPresent(value -> this.mobFarmData = MobFarmType.values()[value]);
-        compoundTag.getInt(CURR_PROGRESS).ifPresent(value -> this.progress = value);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+        input.getInt(MOB_FARM_DATA).ifPresent(value -> this.mobFarmData = MobFarmType.values()[value]);
+        input.getInt(CURR_PROGRESS).ifPresent(value -> this.progress = value);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compoundTag, this.items, provider);
+        ContainerHelper.loadAllItems(input, this.items);
         this.shouldUpdate = true;
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.saveAdditional(compoundTag, provider);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
         if (this.mobFarmData != null) {
-            compoundTag.putInt(MOB_FARM_DATA, this.mobFarmData.ordinal());
-            compoundTag.putInt(CURR_PROGRESS, this.progress);
-            ContainerHelper.saveAllItems(compoundTag, this.items, provider);
+            output.putInt(MOB_FARM_DATA, this.mobFarmData.ordinal());
+            output.putInt(CURR_PROGRESS, this.progress);
+            ContainerHelper.saveAllItems(output, this.items);
         }
     }
 

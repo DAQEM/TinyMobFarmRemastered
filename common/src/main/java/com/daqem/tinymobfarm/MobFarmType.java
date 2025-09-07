@@ -1,5 +1,6 @@
 package com.daqem.tinymobfarm;
 
+import com.daqem.tinymobfarm.item.component.LassoData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -60,7 +61,13 @@ public enum MobFarmType {
     }
 
     public boolean isLassoValid(ItemStack lasso) {
-        return lasso.has(TinyMobFarm.LASSO_DATA.get()) && (this.canFarmHostile || !lasso.get(TinyMobFarm.LASSO_DATA.get()).mobHostile());
+        boolean hasData = lasso.has(TinyMobFarm.LASSO_DATA.get());
+        if (hasData) {
+            LassoData lassoData = lasso.get(TinyMobFarm.LASSO_DATA.get());
+            return this.canFarmHostile || !lassoData.mobHostile();
+        }
+        return false;
+
     }
 
     public int getMaxProgress() {

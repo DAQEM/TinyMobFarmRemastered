@@ -46,3 +46,5 @@ versionRange = "[${ui_library_version},)"
 ordering = "AFTER"
 side = "CLIENT"
 
+[[mixins]]
+config = "tinymobfarm-common.mixins.json"

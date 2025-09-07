@@ -1,39 +1,28 @@
 package com.daqem.tinymobfarm.client.gui;
 
-import com.daqem.tinymobfarm.MobFarmType;
 import com.daqem.tinymobfarm.client.gui.components.MobFarmComponent;
-import com.daqem.uilib.client.gui.AbstractContainerScreen;
+import com.daqem.uilib.gui.AbstractContainerScreen;
+import com.daqem.uilib.gui.background.BlurredBackground;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Arrays;
 
 public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
-
-	private final @Nullable MobFarmType type;
 
     public MobFarmScreen(MobFarmMenu container, Inventory inv, Component text) {
 		super(container, inv, text);
 
-		String id = ((TranslatableContents) this.title.getContents()).getKey().split("\\.")[1];
-		this.type = Arrays.stream(MobFarmType.values()).filter(farm -> farm.getRegistryName().equals(id)).findFirst().orElse(null);
+		this.setBackground(new BlurredBackground());
 	}
 
 	@Override
-	public void startScreen() {
-		setBackground(null);
-
-		MobFarmComponent mobFarmComponent = new MobFarmComponent(this, this.font);
+	public void init() {
+		MobFarmComponent mobFarmComponent = new MobFarmComponent(this);
 		mobFarmComponent.center();
-		addComponents(mobFarmComponent);
-	}
+		this.addComponent(mobFarmComponent);
 
-	@Override
-	public void onTickScreen(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		super.init();
 	}
 
 	//Makes sure the default titles are not rendered
@@ -41,11 +30,13 @@ public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
 	protected void renderLabels(GuiGraphics guiGraphics, int i, int j) {
 	}
 
-	public ItemStack getLasso() {
-		return this.menu.slots.getFirst().getItem();
+	@Override
+	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+		super.render(guiGraphics, mouseX, mouseY, partialTick);
+		this.renderTooltip(guiGraphics, mouseX, mouseY);
 	}
 
-	public @Nullable MobFarmType getType() {
-		return this.type;
+	public ItemStack getLasso() {
+		return this.menu.slots.getFirst().getItem();
 	}
 }

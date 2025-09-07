@@ -1,98 +1,79 @@
 package com.daqem.tinymobfarm.client.gui.components;
 
+import com.daqem.tinymobfarm.MobFarmType;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.client.gui.MobFarmScreen;
 import com.daqem.tinymobfarm.item.LassoItem;
-import com.daqem.uilib.client.gui.component.TextComponent;
-import com.daqem.uilib.client.gui.component.texture.TextureComponent;
-import com.daqem.uilib.client.gui.text.Text;
-import com.daqem.uilib.client.gui.text.TruncatedText;
-import com.daqem.uilib.client.gui.texture.Texture;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
+import com.daqem.uilib.gui.component.sprite.SpriteComponent;
+import com.daqem.uilib.gui.component.text.TextAlign;
+import com.daqem.uilib.gui.component.text.TextComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-public class MobFarmComponent extends TextureComponent {
+public class MobFarmComponent extends SpriteComponent {
 
-    private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(TinyMobFarm.MOD_ID, "textures/gui/farm_gui.png");
     private static final int WIDTH = 176;
     private static final int HEIGHT = 166;
-    private static final Component NO_LASSO = TinyMobFarm.translatable("gui.no_lasso");
     private static final Component REDSTONE_DISABLE = TinyMobFarm.translatable("gui.redstone_disable");
     private static final Component HIGHER_TIER = TinyMobFarm.translatable("gui.higher_tier");
 
     private final MobFarmScreen parent;
-    private final Font font;
 
-    private TextComponent errorText;
-    private TextComponent entityNameComponent;
-    private ProgressBarComponent progressBarComponent;
+    private final TextComponent errorText;
+    private final TextComponent entityNameComponent;
+    private final ProgressBarComponent progressBarComponent;
 
-    public MobFarmComponent(MobFarmScreen parent, Font font) {
-        super(new Texture(TEXTURE_LOCATION, 0, 0, WIDTH, HEIGHT), 0, 0, WIDTH, HEIGHT);
-
+    public MobFarmComponent(MobFarmScreen parent) {
+        super(0, 0, WIDTH, HEIGHT, TinyMobFarm.getId("mob_farm_background"));
         this.parent = parent;
-        this.font = font;
-    }
 
-    @Override
-    public void startRenderable() {
-        super.startRenderable();
-
-        this.errorText = new TextComponent(70, 67, new Text(this.font, Component.empty()));
-        this.errorText.setScale(0.75F);
-        Text titleText = new Text(this.font, parent.getTitle());
-        TextComponent titleComponent = new TextComponent(8, 5, titleText);
+        this.errorText = new TextComponent(0, -10, Component.empty());
+        this.errorText.centerHorizontally();
+        this.errorText.setTextAlign(TextAlign.CENTER);
+        TextComponent titleComponent = new TextComponent(8, 5, parent.getTitle(), 0xFF404040);
         EntityComponent entityComponent = new EntityComponent(8, 15, 52, 63, parent::getLasso);
-        Text entityName = new Text(this.font, Component.empty());
-        this.entityNameComponent = new TextComponent(90, 37, entityName);
+        this.entityNameComponent = new TextComponent(90, 37, Component.empty(), 0xFF555555);
         this.progressBarComponent = new ProgressBarComponent(71, 55, 97, 5, 0xFF3de031, parent.getMenu().getProgress(), parent.getMenu().getMaxProgress());
 
-        titleText.setTextColor(0x404040);
-
-        this.addChildren(this.errorText, titleComponent, entityComponent, this.entityNameComponent, this.progressBarComponent);
+        this.addComponent(this.errorText);
+        this.addComponent(titleComponent);
+        this.addComponent(entityComponent);
+        this.addComponent(this.entityNameComponent);
+        this.addComponent(this.progressBarComponent);
     }
 
     @Override
-    public void resizeScreenRepositionRenderable(int width, int height) {
-        super.resizeScreenRepositionRenderable(width, height);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+        errorText.setText(getLassoError());
 
-        Text errorText = this.getLassoError();
-        this.errorText.setText(errorText);
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, int color) {
-        super.render(graphics, mouseX, mouseY, delta, color);
-        TruncatedText entityText = new TruncatedText(this.font,
+        this.entityNameComponent.setText(
                 parent.getLasso().getItem() instanceof LassoItem lassoItem ?
                         lassoItem.getMobName(parent.getLasso()) :
-                        Component.empty(), 0, 0, 80, 0
+                        Component.empty()
         );
-        entityText.setTextColor(ChatFormatting.DARK_GRAY);
-        this.entityNameComponent.setText(entityText);
 
         this.progressBarComponent.setProgress(parent.getMenu().getProgress());
         this.progressBarComponent.setMaxProgress(parent.getMenu().getMaxProgress());
-
-        this.resizeScreenRepositionRenderable(this.parent.width, this.parent.height);
     }
 
-    private Text getLassoError() {
+    private Component getLassoError() {
         ItemStack lasso = parent.getLasso();
 
         Component component;
-        if (lasso.isEmpty()) component = NO_LASSO;
-        else if (parent.getMenu().isPowered()) component = REDSTONE_DISABLE;
-        else if (parent.getType() != null && !parent.getType().isLassoValid(lasso)) component = HIGHER_TIER;
-        else component = Component.empty();
+        if (parent.getMenu().isPowered()) {
+            component = REDSTONE_DISABLE;
+        } else {
+            MobFarmType type = parent.getMenu().getMobFarmType();
+            if (type != null && lasso != null && !lasso.is(Items.AIR) && !type.isLassoValid(lasso)) {
+                component = HIGHER_TIER;
+            } else {
+                return Component.empty();
+            }
+        }
 
-        Text text = new Text(this.font, component);
-        text.setTextColor(ChatFormatting.RED);
-        text.setWidth(this.font.width(component));
-        return text;
+        return component.copy().withColor(0xFFFF5555);
     }
 }
