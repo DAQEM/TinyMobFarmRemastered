@@ -40,6 +40,6 @@ public class EnchantmentMixin {
                 }
             }
         }
-        return false;
+        return original;
     }
 }
