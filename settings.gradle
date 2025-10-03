@@ -11,4 +11,4 @@ include("common")
 include("fabric")
 include("neoforge")
 
-rootProject.name = "TinyMobFarmRemastered 1.21.6"
+rootProject.name = "TinyMobFarmRemastered 1.21.9"
