@@ -1,6 +1,7 @@
 package com.daqem.tinymobfarm.blockentity;
 
 import com.daqem.tinymobfarm.MobFarmType;
+import com.daqem.tinymobfarm.TintMobFarmExpectPlatform;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.client.gui.MobFarmMenu;
 import com.daqem.tinymobfarm.item.component.LassoData;
@@ -128,45 +129,29 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
 
             if (this.level instanceof ServerLevel serverLevel) {
                 List<ItemStack> drops = EntityHelper.generateLoot(serverLevel, lasso);
-                Container container = HopperBlockEntity.getContainerAt(serverLevel, getBlockPos().relative(Direction.DOWN));
-                NonNullList<ItemStack> dummyContainer = NonNullList.withSize(27, ItemStack.EMPTY);
+                Direction direction = Direction.DOWN;
+                BlockPos targetPos = getBlockPos().relative(direction);
+                Direction targetSide = direction.getOpposite();
 
-                // Fill dummyContainer with drops
-                for (int i = 0; i < drops.size() && i < dummyContainer.size(); i++) {
-                    dummyContainer.set(i, drops.get(i).copy()); // Use copy to avoid modifying original drops
-                }
+                for (ItemStack drop : drops) {
+                    if (drop.isEmpty()) continue;
 
-                if (container != null && !HopperBlockEntity.isFullContainer(container, Direction.UP)) {
-                    // Try to insert all items into the container
-                    for (ItemStack itemStack : dummyContainer) {
-                        if (!itemStack.isEmpty()) {
-                            // Keep trying to add the item stack until it's either fully inserted or can't fit
-                            while (!itemStack.isEmpty()) {
-                                ItemStack singleItem = itemStack.copy();
-                                singleItem.setCount(1);
-                                ItemStack remainder = HopperBlockEntity.addItem(this, container, singleItem, Direction.UP);
-                                if (remainder.isEmpty()) {
-                                    // Item was successfully added, reduce count
-                                    itemStack.shrink(1);
-                                    container.setChanged();
-                                } else {
-                                    // Item couldn't be added, break to drop it
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+                    // Use the cross-platform helper to insert items
+                    ItemStack remainder = TintMobFarmExpectPlatform.insertItem(
+                            serverLevel,
+                            targetPos,
+                            targetSide,
+                            drop.copy()
+                    );
 
-                // Drop any remaining items that couldn't fit
-                for (ItemStack stack : dummyContainer) {
-                    if (!stack.isEmpty()) {
+                    // If there is a remainder (inventory full or no inventory), drop it in the world
+                    if (!remainder.isEmpty()) {
                         ItemEntity entityItem = new ItemEntity(
                                 this.level,
                                 this.worldPosition.getX() + 0.5,
-                                this.worldPosition.getY() + 1,
+                                this.worldPosition.getY() + (1F / 14F * 13F),
                                 this.worldPosition.getZ() + 0.5,
-                                stack.copy()
+                                remainder
                         );
                         this.level.addFreshEntity(entityItem);
                     }
