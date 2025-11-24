@@ -1,9 +1,8 @@
 package com.daqem.tinymobfarm.util;
 
-import com.daqem.tinymobfarm.ConfigTinyMobFarm;
+import com.daqem.tinymobfarm.config.TMFConfig;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.item.component.LassoData;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -56,7 +55,7 @@ public class EntityHelper {
         int lootingLevel = EnchantmentHelper.getItemEnchantmentLevel(registryReference, stack);
         ItemStack sword = new ItemStack(Items.DIAMOND_SWORD);
 
-        if (ConfigTinyMobFarm.allowLassoLooting.get() && lootingLevel > 0) {
+        if (TMFConfig.allowLassoLooting.get() && lootingLevel > 0) {
             sword.enchant(registryReference, lootingLevel);
         }
         daniel.addItem(sword);

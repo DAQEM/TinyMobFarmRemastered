@@ -13,7 +13,7 @@ public class MobInteractionEvent {
         InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> {
             ItemStack stack = player.getItemInHand(hand);
             if (stack.getItem() instanceof LassoItem lassoItem && entity instanceof LivingEntity target) {
-                if (lassoItem.interactMob(stack, player, target, hand) == InteractionResult.SUCCESS) {
+                if (lassoItem.interactMob(stack, player, target) == InteractionResult.SUCCESS) {
                     return EventResult.interruptTrue();
                 }
             }

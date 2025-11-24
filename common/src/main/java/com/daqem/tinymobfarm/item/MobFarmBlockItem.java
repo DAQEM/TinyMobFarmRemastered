@@ -3,6 +3,7 @@ package com.daqem.tinymobfarm.item;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.block.MobFarmBlock;
 import com.mojang.blaze3d.platform.InputConstants;
+import com.sun.jna.platform.unix.solaris.LibKstat;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -18,9 +19,15 @@ public class MobFarmBlockItem extends BlockItem {
     private final MobFarmBlock block;
 
     public MobFarmBlockItem(MobFarmBlock block, Properties builder) {
-        //noinspection UnstableApiUsage
-        super(block, builder.arch$tab(TinyMobFarm.TINY_MOB_FARM_TAB).stacksTo(64));
+        super(block, buildProperties(block, builder));
         this.block = block;
+    }
+
+    private static Properties buildProperties(MobFarmBlock block, Properties builder) {
+        if (block.getMobFarmType().isEnabled()) {
+            builder = builder.arch$tab(TinyMobFarm.TINY_MOB_FARM_TAB);
+        }
+        return builder.stacksTo(64);
     }
 
     @Override

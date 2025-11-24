@@ -1,5 +1,6 @@
 package com.daqem.tinymobfarm.client.render;
 
+import com.daqem.tinymobfarm.block.MobFarmBlock;
 import com.daqem.tinymobfarm.blockentity.MobFarmBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -11,7 +12,6 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,11 +40,14 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
             Entity entity = mobFarmBlockEntity.getLivingEntity();
             extractMobFarmData(MobFarmRenderState, f, entity, this.entityRenderer);
         }
-        MobFarmRenderState.angle = mobFarmBlockEntity.getBlockState().getValue(ChestBlock.FACING).toYRot();
+        MobFarmRenderState.angle = mobFarmBlockEntity.getBlockState().getValue(MobFarmBlock.FACING).toYRot();
     }
 
     static void extractMobFarmData(
-            MobFarmRenderState renderState, float f, @Nullable Entity entity, EntityRenderDispatcher entityRenderDispatcher
+            MobFarmRenderState renderState,
+            float f,
+            @Nullable Entity entity,
+            EntityRenderDispatcher entityRenderDispatcher
     ) {
         if (entity != null) {
             renderState.displayEntity = entityRenderDispatcher.extractEntity(entity, f);
@@ -57,10 +60,21 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
         }
     }
 
-    public void submit(MobFarmRenderState renderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+    public void submit(
+            MobFarmRenderState renderState,
+            PoseStack poseStack,
+            SubmitNodeCollector submitNodeCollector,
+            CameraRenderState cameraRenderState
+    ) {
         if (renderState.displayEntity != null) {
             submitEntityInMobFarm(
-                    poseStack, submitNodeCollector, renderState.displayEntity, this.entityRenderer, renderState.scale, renderState.angle, cameraRenderState
+                    poseStack,
+                    submitNodeCollector,
+                    renderState.displayEntity,
+                    this.entityRenderer,
+                    renderState.scale,
+                    renderState.angle,
+                    cameraRenderState
             );
         }
     }

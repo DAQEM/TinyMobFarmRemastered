@@ -1,6 +1,6 @@
 package com.daqem.tinymobfarm.item;
 
-import com.daqem.tinymobfarm.ConfigTinyMobFarm;
+import com.daqem.tinymobfarm.config.TMFConfig;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.item.component.LassoData;
 import com.daqem.tinymobfarm.util.EntityHelper;
@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
@@ -37,10 +38,10 @@ public class LassoItem extends Item {
         super(properties
                 .arch$tab(TinyMobFarm.TINY_MOB_FARM_TAB)
                 .enchantable(1)
-                .durability(ConfigTinyMobFarm.lassoDurability.get()));
+                .durability(TMFConfig.lassoDurability.get()));
     }
 
-    public @NotNull InteractionResult interactMob(ItemStack stack, Player player, LivingEntity target, InteractionHand interactionHand) {
+    public @NotNull InteractionResult interactMob(ItemStack stack, Player player, LivingEntity target) {
         if (stack.has(TinyMobFarm.LASSO_DATA.get())
                 || !target.isAlive()
                 || !(target instanceof Mob)) {
@@ -48,8 +49,8 @@ public class LassoItem extends Item {
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            if (!target.canUsePortal(false)) {
-                serverPlayer.sendSystemMessage(TinyMobFarm.translatable("error.cannot_capture_boss"));
+            if (target.getType().arch$registryName() instanceof ResourceLocation location && TMFConfig.blacklistedMobs.get().contains(location.toString())) {
+                serverPlayer.sendSystemMessage(TinyMobFarm.translatable("error.blacklist_mob").withStyle(ChatFormatting.RED));
                 return InteractionResult.SUCCESS;
             }
             try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(target.problemPath(), TinyMobFarm.LOGGER)) {

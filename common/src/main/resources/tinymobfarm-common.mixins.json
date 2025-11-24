@@ -6,7 +6,8 @@
   "client": [
   ],
   "mixins": [
-    "EnchantmentMixin"
+    "EnchantmentMixin",
+    "RecipeManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

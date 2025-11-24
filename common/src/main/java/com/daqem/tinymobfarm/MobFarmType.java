@@ -1,5 +1,6 @@
 package com.daqem.tinymobfarm;
 
+import com.daqem.tinymobfarm.config.TMFConfig;
 import com.daqem.tinymobfarm.item.component.LassoData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -12,32 +13,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-;
-
 public enum MobFarmType {
 
-    WOOD("wood_farm", Blocks.OAK_WOOD, false, new int[]{2, 3, 3}, ConfigTinyMobFarm.woodFarmSpeed.get()),
-    STONE("stone_farm", Blocks.STONE, false, new int[]{1, 2, 3}, ConfigTinyMobFarm.stoneFarmSpeed.get()),
-    IRON("iron_farm", Blocks.IRON_BLOCK, true, new int[]{1, 2}, ConfigTinyMobFarm.ironFarmSpeed.get()),
-    GOLD("gold_farm", Blocks.GOLD_BLOCK, true, new int[]{1, 1, 2}, ConfigTinyMobFarm.goldFarmSpeed.get()),
-    DIAMOND("diamond_farm", Blocks.DIAMOND_BLOCK, true, new int[]{1}, ConfigTinyMobFarm.diamondFarmSpeed.get()),
-    EMERALD("emerald_farm", Blocks.EMERALD_BLOCK, true, new int[]{0, 1, 1}, ConfigTinyMobFarm.emeraldFarmSpeed.get()),
-    INFERNAL("inferno_farm", Blocks.OBSIDIAN, true, new int[]{0, 0, 1}, ConfigTinyMobFarm.infernoFarmSpeed.get()),
-    ULTIMATE("ultimate_farm", Blocks.OBSIDIAN, true, new int[]{0}, ConfigTinyMobFarm.ultimateFarmSpeed.get());
+    WOOD("wood_farm", Blocks.OAK_WOOD, TMFConfig.woodFarmAllowsHostile.get(), new int[]{2, 3, 3}, TMFConfig.woodFarmSpeed.get(), TMFConfig.woodFarmEnabled.get()),
+    STONE("stone_farm", Blocks.STONE, TMFConfig.stoneFarmAllowsHostile.get(), new int[]{1, 2, 3}, TMFConfig.stoneFarmSpeed.get(), TMFConfig.stoneFarmEnabled.get()),
+    IRON("iron_farm", Blocks.IRON_BLOCK, TMFConfig.ironFarmAllowsHostile.get(), new int[]{1, 2}, TMFConfig.ironFarmSpeed.get(), TMFConfig.ironFarmEnabled.get()),
+    GOLD("gold_farm", Blocks.GOLD_BLOCK, TMFConfig.goldFarmAllowsHostile.get(), new int[]{1, 1, 2}, TMFConfig.goldFarmSpeed.get(), TMFConfig.goldFarmEnabled.get()),
+    DIAMOND("diamond_farm", Blocks.DIAMOND_BLOCK, TMFConfig.diamondFarmAllowsHostile.get(), new int[]{1}, TMFConfig.diamondFarmSpeed.get(), TMFConfig.diamondFarmEnabled.get()),
+    EMERALD("emerald_farm", Blocks.EMERALD_BLOCK, TMFConfig.emeraldFarmAllowsHostile.get(), new int[]{0, 1, 1}, TMFConfig.emeraldFarmSpeed.get(), TMFConfig.emeraldFarmEnabled.get()),
+    INFERNAL("inferno_farm", Blocks.OBSIDIAN, TMFConfig.infernoFarmAllowsHostile.get(), new int[]{0, 0, 1}, TMFConfig.infernoFarmSpeed.get(), TMFConfig.infernoFarmEnabled.get()),
+    ULTIMATE("ultimate_farm", Blocks.OBSIDIAN, TMFConfig.ultimateFarmAllowsHostile.get(), new int[]{0}, TMFConfig.ultimateFarmSpeed.get(), TMFConfig.ultimateFarmEnabled.get());
 
     private final String registryName;
     private final Block baseBlock;
     private final boolean canFarmHostile;
     private final int[] damageChance;
     private final double farmSpeed;
+    private final boolean enabled;
     private final Map<Integer, Integer> normalizedChance;
 
-    MobFarmType(String registryName, Block baseBlock, boolean canFarmHostile, int[] damageChance, double farmSpeed) {
+    MobFarmType(String registryName, Block baseBlock, boolean canFarmHostile, int[] damageChance, double farmSpeed, boolean enabled) {
         this.registryName = registryName;
         this.baseBlock = baseBlock;
         this.canFarmHostile = canFarmHostile;
         this.damageChance = damageChance;
         this.farmSpeed = farmSpeed;
+        this.enabled = enabled;
 
         this.normalizedChance = new HashMap<>();
         for (int i : this.damageChance) {
@@ -91,5 +92,9 @@ public enum MobFarmType {
                 consumer.accept(TinyMobFarm.translatable("tooltip.default_durability", ChatFormatting.GRAY, this.normalizedChance.get(i), i));
             }
         }
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

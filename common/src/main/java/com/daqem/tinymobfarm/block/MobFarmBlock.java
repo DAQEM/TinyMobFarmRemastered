@@ -62,6 +62,10 @@ public class MobFarmBlock extends BaseEntityBlock {
 		this.mobFarmType = mobFarmType;
 	}
 
+	public MobFarmType getMobFarmType() {
+		return mobFarmType;
+	}
+
 	public void getTooltipBuilder(Consumer<Component> consumer) {
 		this.mobFarmType.addTooltip(consumer);
 	}
