@@ -9,9 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.nio.file.Path;
-
-public class TintMobFarmExpectPlatform {
+public class TinyMobFarmExpectPlatform {
 
     @ExpectPlatform
     public static ServerPlayer getFakePlayer(ServerLevel serverLevel, GameProfile gameProfile) {

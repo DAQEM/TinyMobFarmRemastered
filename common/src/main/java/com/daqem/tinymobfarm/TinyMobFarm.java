@@ -20,7 +20,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -90,15 +90,15 @@ public class TinyMobFarm {
     public static final Registrar<DataComponentType<?>> COMPONENTS = MANAGER.get().get(Registries.DATA_COMPONENT_TYPE);
     public static final RegistrySupplier<DataComponentType<LassoData>> LASSO_DATA = COMPONENTS.register(getId("lasso_data"), () -> ((DataComponentType.Builder) DataComponentType.builder()).persistent(LassoData.CODEC).networkSynchronized(LassoData.STREAM_CODEC).build());
 
-    static <T extends Block> RegistrySupplier<T> block(ResourceLocation id, Function<BlockBehaviour.Properties, T> constructor) {
+    static <T extends Block> RegistrySupplier<T> block(Identifier id, Function<BlockBehaviour.Properties, T> constructor) {
         return BLOCKS.register(id, () -> constructor.apply(BlockBehaviour.Properties.of().setId(ResourceKey.create(Registries.BLOCK, id))));
     }
 
-    static <T extends Item> RegistrySupplier<T> blockItem(ResourceLocation id, Function<Item.Properties, T> constructor) {
+    static <T extends Item> RegistrySupplier<T> blockItem(Identifier id, Function<Item.Properties, T> constructor) {
         return ITEMS.register(id, () -> constructor.apply(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id)).useBlockDescriptionPrefix()));
     }
 
-    static <T extends Item> RegistrySupplier<T> item(ResourceLocation id, Function<Item.Properties, T> constructor) {
+    static <T extends Item> RegistrySupplier<T> item(Identifier id, Function<Item.Properties, T> constructor) {
         return ITEMS.register(id, () -> constructor.apply(new Item.Properties().setId(ResourceKey.create(Registries.ITEM, id))));
     }
 
@@ -127,7 +127,7 @@ public class TinyMobFarm {
         return Component.literal(str);
     }
 
-    public static ResourceLocation getId(String str) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, str);
+    public static Identifier getId(String str) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, str);
     }
 }

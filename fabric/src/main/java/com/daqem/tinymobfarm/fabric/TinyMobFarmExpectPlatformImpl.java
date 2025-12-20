@@ -13,7 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class TintMobFarmExpectPlatformImpl {
+public class TinyMobFarmExpectPlatformImpl {
 
     public static ServerPlayer getFakePlayer(ServerLevel serverLevel, GameProfile gameProfile) {
         return FakePlayer.get(serverLevel, gameProfile);

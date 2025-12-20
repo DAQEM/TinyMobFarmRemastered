@@ -21,6 +21,7 @@ public class SideProxyNeoForge {
             modEventBus.addListener(this::registerRenderers);
         }
 
+
         @SubscribeEvent
         private void registerScreens(RegisterMenuScreensEvent event) {
             event.register(TinyMobFarm.MOB_FARM_CONTAINER.get(), MobFarmScreen::new);
@@ -30,6 +31,7 @@ public class SideProxyNeoForge {
         public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerBlockEntityRenderer(TinyMobFarm.MOB_FARM_TILE_ENTITY.get(), MobFarmRenderer::new);
         }
+
     }
 
     public static class Server extends SideProxyNeoForge {

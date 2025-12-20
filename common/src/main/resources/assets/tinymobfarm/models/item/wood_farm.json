@@ -1,6 +1,7 @@
 {
 	"parent": "tinymobfarm:item/item_farm_preset",
 	"textures": {
+		"particle": "minecraft:block/oak_planks",
 		"material": "minecraft:block/oak_planks"
 	}
 }

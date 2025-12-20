@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
@@ -49,7 +49,7 @@ public class LassoItem extends Item {
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            if (target.getType().arch$registryName() instanceof ResourceLocation location && TMFConfig.blacklistedMobs.get().contains(location.toString())) {
+            if (target.getType().arch$registryName() instanceof Identifier location && TMFConfig.blacklistedMobs.get().contains(location.toString())) {
                 serverPlayer.sendSystemMessage(TinyMobFarm.translatable("error.blacklist_mob").withStyle(ChatFormatting.RED));
                 return InteractionResult.SUCCESS;
             }
@@ -68,7 +68,7 @@ public class LassoItem extends Item {
                         target.getHealth(),
                         target.getMaxHealth(),
                         target instanceof Monster,
-                        target.getLootTable().get().location()
+                        target.getLootTable().get().identifier()
                 );
 
                 stack.set(TinyMobFarm.LASSO_DATA.get(), lassoData);

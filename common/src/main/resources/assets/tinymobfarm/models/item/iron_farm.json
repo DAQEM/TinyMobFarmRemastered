@@ -1,6 +1,7 @@
 {
 	"parent": "tinymobfarm:item/item_farm_preset",
 	"textures": {
+		"particle": "minecraft:block/iron_block",
 		"material": "minecraft:block/iron_block"
 	}
 }

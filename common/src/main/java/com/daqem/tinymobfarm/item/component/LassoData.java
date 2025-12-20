@@ -5,21 +5,21 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record LassoData(String mobName, ResourceLocation mobId, CompoundTag mobData, float mobHealth, float mobMaxHealth, boolean mobHostile, ResourceLocation mobLootTableLocation) {
+public record LassoData(String mobName, Identifier mobId, CompoundTag mobData, float mobHealth, float mobMaxHealth, boolean mobHostile, Identifier mobLootTableLocation) {
 
     public static final Codec<LassoData> CODEC = Codec.lazyInitialized(() ->
         RecordCodecBuilder.create(instance -> instance.group(
                 Codec.STRING.fieldOf("mobName").forGetter(LassoData::mobName),
-                ResourceLocation.CODEC.fieldOf("mobId").forGetter(LassoData::mobId),
+                Identifier.CODEC.fieldOf("mobId").forGetter(LassoData::mobId),
                 CompoundTag.CODEC.fieldOf("mobData").forGetter(LassoData::mobData),
                 Codec.FLOAT.fieldOf("mobHealth").forGetter(LassoData::mobHealth),
                 Codec.FLOAT.fieldOf("mobMaxHealth").forGetter(LassoData::mobMaxHealth),
                 Codec.BOOL.fieldOf("mobHostile").forGetter(LassoData::mobHostile),
-                ResourceLocation.CODEC.fieldOf("mobLootTableLocation").forGetter(LassoData::mobLootTableLocation)
+                Identifier.CODEC.fieldOf("mobLootTableLocation").forGetter(LassoData::mobLootTableLocation)
         ).apply(instance, LassoData::new))
     );
 
@@ -31,12 +31,12 @@ public record LassoData(String mobName, ResourceLocation mobId, CompoundTag mobD
             }
             return new LassoData(
                     buf.readUtf(),
-                    buf.readResourceLocation(),
+                    buf.readIdentifier(),
                     buf.readNbt(),
                     buf.readFloat(),
                     buf.readFloat(),
                     buf.readBoolean(),
-                    buf.readResourceLocation()
+                    buf.readIdentifier()
             );
         }
 
@@ -47,12 +47,12 @@ public record LassoData(String mobName, ResourceLocation mobId, CompoundTag mobD
                 return;
             }
             buf.writeUtf(packet.mobName());
-            buf.writeResourceLocation(packet.mobId());
+            buf.writeIdentifier(packet.mobId());
             buf.writeNbt(packet.mobData());
             buf.writeFloat(packet.mobHealth());
             buf.writeFloat(packet.mobMaxHealth());
             buf.writeBoolean(packet.mobHostile());
-            buf.writeResourceLocation(packet.mobLootTableLocation());
+            buf.writeIdentifier(packet.mobLootTableLocation());
         }
     };
 }

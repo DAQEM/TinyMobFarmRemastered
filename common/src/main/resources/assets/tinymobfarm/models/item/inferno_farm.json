@@ -1,6 +1,7 @@
 {
 	"parent": "tinymobfarm:item/item_farm_preset",
 	"textures": {
+		"particle": "minecraft:block/netherrack",
 		"material": "minecraft:block/netherrack"
 	}
 }

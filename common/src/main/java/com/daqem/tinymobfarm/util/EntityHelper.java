@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -83,7 +83,7 @@ public class EntityHelper {
         LassoData data = lasso.get(TinyMobFarm.LASSO_DATA.get());
         if (data == null) return null;
         CompoundTag mobData = data.mobData();
-        ResourceLocation id = data.mobId();
+        Identifier id = data.mobId();
 
         DoubleTag x = DoubleTag.valueOf(pos.getX() + 0.5);
         DoubleTag y = DoubleTag.valueOf(pos.getY());

@@ -12,8 +12,9 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import org.jetbrains.annotations.NotNull;
 
-public class TintMobFarmExpectPlatformImpl {
+public class TinyMobFarmExpectPlatformImpl {
 
     public static ServerPlayer getFakePlayer(ServerLevel serverLevel, GameProfile gameProfile) {
         return new FakePlayer(serverLevel, gameProfile);
@@ -23,7 +24,7 @@ public class TintMobFarmExpectPlatformImpl {
         if (stack.isEmpty()) return ItemStack.EMPTY;
 
         // 1. Get the new ResourceHandler capability
-        ResourceHandler<ItemResource> handler = level.getCapability(Capabilities.Item.BLOCK, pos, direction);
+        ResourceHandler<@NotNull ItemResource> handler = level.getCapability(Capabilities.Item.BLOCK, pos, direction);
 
         if (handler == null) {
             return stack; // No inventory found

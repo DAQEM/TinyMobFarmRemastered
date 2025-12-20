@@ -1,7 +1,7 @@
 package com.daqem.tinymobfarm.blockentity;
 
 import com.daqem.tinymobfarm.MobFarmType;
-import com.daqem.tinymobfarm.TintMobFarmExpectPlatform;
+import com.daqem.tinymobfarm.TinyMobFarmExpectPlatform;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.client.gui.MobFarmMenu;
 import com.daqem.tinymobfarm.item.component.LassoData;
@@ -34,14 +34,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Container {
@@ -137,7 +135,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
                     if (drop.isEmpty()) continue;
 
                     // Use the cross-platform helper to insert items
-                    ItemStack remainder = TintMobFarmExpectPlatform.insertItem(
+                    ItemStack remainder = TinyMobFarmExpectPlatform.insertItem(
                             serverLevel,
                             targetPos,
                             targetSide,

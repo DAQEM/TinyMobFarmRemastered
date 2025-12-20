@@ -9,10 +9,7 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 @Mod(TinyMobFarm.MOD_ID)
 public class TinyMobFarmNeoForge {
 
-    public TinyMobFarmNeoForge(IEventBus modEventBus) {
-        EnvExecutor.getEnvSpecific(
-                () -> () -> new SideProxyNeoForge.Client(modEventBus),
-                () -> () -> new SideProxyNeoForge.Server(modEventBus)
-        );
+    public TinyMobFarmNeoForge() {
+        TinyMobFarm.init();
     }
 }

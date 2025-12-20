@@ -2,7 +2,7 @@ package com.daqem.tinymobfarm.mixin;
 
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.config.TMFConfig;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.Recipe;
@@ -28,7 +28,7 @@ public class RecipeManagerMixin {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    protected void tinymobfarm$filterRecipes(ResourceManager resourceManager, ProfilerFiller profilerFiller, CallbackInfoReturnable<RecipeMap> cir, SortedMap<ResourceLocation, Recipe<?>> sortedMap) {
+    protected void tinymobfarm$filterRecipes(ResourceManager resourceManager, ProfilerFiller profilerFiller, CallbackInfoReturnable<RecipeMap> cir, SortedMap<Identifier, Recipe<?>> sortedMap) {
         // Remove recipes if their config is set to false
         if (!TMFConfig.woodFarmEnabled.get()) sortedMap.remove(TinyMobFarm.getId("wood_farm"));
         if (!TMFConfig.stoneFarmEnabled.get()) sortedMap.remove(TinyMobFarm.getId("stone_farm"));
