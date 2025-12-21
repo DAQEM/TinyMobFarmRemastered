@@ -19,7 +19,7 @@
   "tinymobfarm.tooltip.durability_info": "对套索造成的磨损：",
   "tinymobfarm.tooltip.farm_rate": "每%d秒生成一次战利品",
   "tinymobfarm.tooltip.health.key": "血量: %d/%d",
-  "tinymobfarm.tooltip.hold_shift": "按住潜行查看统计数据。",
+  "tinymobfarm.tooltip.hold_shift": "按住 Shift 查看属性。",
   "tinymobfarm.tooltip.hostile.key": "该生物具有攻击性",
   "tinymobfarm.tooltip.mob_id.key": "ID：%s",
   "tinymobfarm.tooltip.mob_name.key": "生物名：%s",

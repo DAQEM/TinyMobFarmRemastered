@@ -19,7 +19,7 @@
   "tinymobfarm.tooltip.durability_info": "Потеря прочности лассо:",
   "tinymobfarm.tooltip.farm_rate": "Создает добычу каждые %d секунд.",
   "tinymobfarm.tooltip.health.key": "Здоровье: %d/%d",
-  "tinymobfarm.tooltip.hold_shift": "Удерживайте приседание для статистики.",
+  "tinymobfarm.tooltip.hold_shift": "Удерживайте Shift для просмотра характеристик.",
   "tinymobfarm.tooltip.hostile.key": "Моб враждебен.",
   "tinymobfarm.tooltip.mob_id.key": "ID: %s",
   "tinymobfarm.tooltip.mob_name.key": "Moб: %s",
