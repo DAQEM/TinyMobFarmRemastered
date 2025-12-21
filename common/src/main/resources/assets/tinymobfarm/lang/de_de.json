@@ -20,7 +20,7 @@
   "tinymobfarm.tooltip.health.key": "Gesundheit: %d/%d",
   "tinymobfarm.tooltip.hostile.key": "Mob ist feindselig.",
   "tinymobfarm.tooltip.capture.key": "Rechtsklick auf einen Mob zum Einfangen.",
-  "tinymobfarm.tooltip.hold_shift": "Halte Schleichen für Statistiken.",
+  "tinymobfarm.tooltip.hold_shift": "UMSCHALT für Statistiken gedrückt halten.",
   "tinymobfarm.tooltip.farm_rate": "Erzeugt Beute alle %d Sekunden.",
   "tinymobfarm.tooltip.durability_info": "Haltbarkeitsverlust des Lassos:",
   "tinymobfarm.tooltip.no_hostile": "Kann keine feindseligen Mobs farmen.",

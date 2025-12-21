@@ -20,7 +20,7 @@
   "tinymobfarm.tooltip.health.key": "Salud: %d/%d",
   "tinymobfarm.tooltip.hostile.key": "La criatura es hostil.",
   "tinymobfarm.tooltip.capture.key": "Clic derecho en una criatura para capturarla.",
-  "tinymobfarm.tooltip.hold_shift": "Mantén agacharse para ver estadísticas.",
+  "tinymobfarm.tooltip.hold_shift": "Mantén Mayús para ver estadísticas.",
   "tinymobfarm.tooltip.farm_rate": "Genera botín cada %d segundos.",
   "tinymobfarm.tooltip.durability_info": "Pérdida de durabilidad del lazo:",
   "tinymobfarm.tooltip.no_hostile": "No admite criaturas hostiles.",

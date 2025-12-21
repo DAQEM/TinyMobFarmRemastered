@@ -20,7 +20,7 @@
   "tinymobfarm.tooltip.health.key": "Santé : %d/%d",
   "tinymobfarm.tooltip.hostile.key": "Le mob est hostile.",
   "tinymobfarm.tooltip.capture.key": "Clic droit sur un mob pour le capturer.",
-  "tinymobfarm.tooltip.hold_shift": "Maintenez s'accroupir pour les stats.",
+  "tinymobfarm.tooltip.hold_shift": "Maintenez Maj pour les statistiques.",
   "tinymobfarm.tooltip.farm_rate": "Génère du butin toutes les %d secondes.",
   "tinymobfarm.tooltip.durability_info": "Perte de durabilité du lasso :",
   "tinymobfarm.tooltip.no_hostile": "Impossible d'exploiter des mobs hostiles.",
