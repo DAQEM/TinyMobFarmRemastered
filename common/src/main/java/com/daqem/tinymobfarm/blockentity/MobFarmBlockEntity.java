@@ -169,7 +169,10 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
 
                         if (newModel instanceof LivingEntity) {
                             this.livingEntity = (LivingEntity) newModel;
-                            this.modelFacing = this.level.getBlockState(this.worldPosition).getValue(HorizontalDirectionalBlock.FACING);
+                            BlockState state = this.level.getBlockState(this.worldPosition);
+                            if (state.hasProperty(HorizontalDirectionalBlock.FACING)) {
+                                this.modelFacing = state.getValue(HorizontalDirectionalBlock.FACING);
+                            }
                         }
                     }
                 }
