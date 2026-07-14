@@ -84,7 +84,7 @@ public enum MobFarmType {
         if (!this.canFarmHostile.get()) {
             consumer.accept(TinyMobFarm.translatable("tooltip.no_hostile", ChatFormatting.RED));
         }
-        consumer.accept(TinyMobFarm.translatable("tooltip.farm_rate", ChatFormatting.GRAY, this.farmSpeed));
+        consumer.accept(TinyMobFarm.translatable("tooltip.farm_rate", ChatFormatting.GRAY, this.farmSpeed.get()));
         consumer.accept(TinyMobFarm.translatable("tooltip.durability_info", ChatFormatting.GRAY));
         for (int i : this.normalizedChance.keySet()) {
             if (i == 0) {
