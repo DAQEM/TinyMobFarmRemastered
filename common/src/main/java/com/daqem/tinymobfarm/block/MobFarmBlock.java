@@ -1,10 +1,7 @@
 package com.daqem.tinymobfarm.block;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.blockentity.MobFarmBlockEntity;
@@ -42,6 +39,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class MobFarmBlock extends BaseEntityBlock {
 
@@ -83,7 +81,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	public void setPlacedBy(@NonNull Level level, @NonNull BlockPos pos, @NonNull BlockState state, @Nullable LivingEntity placer, @NonNull ItemStack stack) {
 		super.setPlacedBy(level, pos, state, placer, stack);
 
 		BlockEntity tileEntity = level.getBlockEntity(pos);
@@ -94,7 +92,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	protected @NotNull InteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+	protected @NotNull InteractionResult useItemOn(@NonNull ItemStack itemStack, @NonNull BlockState blockState, @NonNull Level level, @NonNull BlockPos blockPos, @NonNull Player player, @NonNull InteractionHand interactionHand, @NonNull BlockHitResult blockHitResult) {
 		if (level.isClientSide()) return InteractionResult.SUCCESS;
 
 		BlockEntity tileEntity = level.getBlockEntity(blockPos);
@@ -106,7 +104,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	protected @NotNull BlockState updateShape(BlockState blockState, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState2, RandomSource randomSource) {
+	protected @NotNull BlockState updateShape(@NonNull BlockState blockState, LevelReader levelReader, @NonNull ScheduledTickAccess scheduledTickAccess, @NonNull BlockPos blockPos, @NonNull Direction direction, @NonNull BlockPos blockPos2, @NonNull BlockState blockState2, @NonNull RandomSource randomSource) {
 		BlockEntity tileEntity = levelReader.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
 			mobFarmBlockEntity.updateRedstone();
@@ -116,7 +114,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	protected void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, @Nullable Orientation orientation, boolean bl) {
+	protected void neighborChanged(@NonNull BlockState blockState, Level level, @NonNull BlockPos blockPos, @NonNull Block block, @Nullable Orientation orientation, boolean bl) {
 		BlockEntity tileEntity = level.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
 			mobFarmBlockEntity.updateRedstone();
@@ -125,7 +123,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public void playerDestroy(Level level, Player player, BlockPos blockPos, BlockState blockState, @Nullable BlockEntity blockEntity, ItemStack itemStack) {
+	public void playerDestroy(Level level, @NonNull Player player, @NonNull BlockPos blockPos, @NonNull BlockState blockState, @Nullable BlockEntity blockEntity, @NonNull ItemStack itemStack) {
 		BlockEntity tileEntity = level.getBlockEntity(blockPos);
 		if (tileEntity instanceof MobFarmBlockEntity mobFarmBlockEntity) {
 			ItemStack lasso = mobFarmBlockEntity.getLasso();
@@ -138,29 +136,24 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
+	public @NotNull VoxelShape getShape(@NonNull BlockState blockState, @NonNull BlockGetter blockGetter, @NonNull BlockPos blockPos, @NonNull CollisionContext collisionContext) {
 		return BOUNDING_BOX;
 	}
 
 	@Override
-	protected boolean propagatesSkylightDown(BlockState blockState) {
+	protected boolean propagatesSkylightDown(@NonNull BlockState blockState) {
 		return true;
-	}
-
-	@Override
-	protected int getLightBlock(BlockState blockState) {
-		return 0;
 	}
 
 	@Nullable
 	@Override
-	public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+	public BlockEntity newBlockEntity(@NonNull BlockPos blockPos, @NonNull BlockState blockState) {
 		return new MobFarmBlockEntity(blockPos, blockState);
 	}
 
 	@Nullable
 	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NonNull Level level, @NonNull BlockState blockState, @NonNull BlockEntityType<T> blockEntityType) {
 		return MobFarmBlock.createTickerHelper(blockEntityType, TinyMobFarm.MOB_FARM_TILE_ENTITY.get(), MobFarmBlockEntity::tick);
 	}
 
@@ -174,7 +167,7 @@ public class MobFarmBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public @NotNull RenderShape getRenderShape(BlockState blockState) {
+	public @NotNull RenderShape getRenderShape(@NonNull BlockState blockState) {
 		return RenderShape.MODEL;
 	}
 }

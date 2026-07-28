@@ -45,8 +45,8 @@ public class MobFarmComponent extends SpriteComponent {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
         errorText.setText(getLassoError());
 
         this.entityNameComponent.setText(

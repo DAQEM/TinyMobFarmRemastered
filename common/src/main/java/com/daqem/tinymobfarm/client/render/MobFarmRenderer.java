@@ -15,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, MobFarmRenderState> {
     private final EntityRenderDispatcher entityRenderer;
@@ -29,10 +30,10 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
     }
 
     public void extractRenderState(
-            MobFarmBlockEntity mobFarmBlockEntity,
-            MobFarmRenderState MobFarmRenderState,
+            @NonNull MobFarmBlockEntity mobFarmBlockEntity,
+            @NonNull MobFarmRenderState MobFarmRenderState,
             float f,
-            Vec3 vec3,
+            @NonNull Vec3 vec3,
             @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
     ) {
         BlockEntityRenderer.super.extractRenderState(mobFarmBlockEntity, MobFarmRenderState, f, vec3, crumblingOverlay);
@@ -62,9 +63,9 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
 
     public void submit(
             MobFarmRenderState renderState,
-            PoseStack poseStack,
-            SubmitNodeCollector submitNodeCollector,
-            CameraRenderState cameraRenderState
+            @NonNull PoseStack poseStack,
+            @NonNull SubmitNodeCollector submitNodeCollector,
+            @NonNull CameraRenderState cameraRenderState
     ) {
         if (renderState.displayEntity != null) {
             submitEntityInMobFarm(

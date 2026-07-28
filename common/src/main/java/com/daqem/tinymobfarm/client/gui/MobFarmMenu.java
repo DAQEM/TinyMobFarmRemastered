@@ -14,6 +14,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 public class MobFarmMenu extends AbstractContainerMenu {
 
@@ -56,12 +57,12 @@ public class MobFarmMenu extends AbstractContainerMenu {
 	}
 
 	@Override
-	public boolean stillValid(Player player) {
+	public boolean stillValid(@NonNull Player player) {
 		return true;
 	}
 	
 	@Override
-	public @NotNull ItemStack quickMoveStack(Player player, int index) {
+	public @NotNull ItemStack quickMoveStack(@NonNull Player player, int index) {
 		Slot slot = slots.get(index);
 		if (!slot.hasItem()) {
 			return ItemStack.EMPTY;

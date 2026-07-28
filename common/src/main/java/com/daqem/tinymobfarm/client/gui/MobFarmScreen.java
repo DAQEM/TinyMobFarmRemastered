@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import org.jspecify.annotations.NonNull;
 
 public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
 
@@ -25,15 +26,14 @@ public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
 		super.init();
 	}
 
-	//Makes sure the default titles are not rendered
 	@Override
-	protected void renderLabels(GuiGraphicsExtractor guiGraphics, int i, int j) {
+	protected void extractLabels(@NonNull GuiGraphicsExtractor guiGraphics, int i, int j) {
 	}
 
 	@Override
-	public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-		super.render(guiGraphics, mouseX, mouseY, partialTick);
-		this.renderTooltip(guiGraphics, mouseX, mouseY);
+	public void extractRenderState(@NonNull GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+		super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+		this.extractTooltip(guiGraphics, mouseX, mouseY);
 	}
 
 	public ItemStack getLasso() {

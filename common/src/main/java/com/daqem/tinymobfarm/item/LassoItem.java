@@ -14,6 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Monster;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.Vec2;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
@@ -35,7 +37,6 @@ public class LassoItem extends Item {
     public LassoItem(Properties properties) {
         //noinspection UnstableApiUsage
         super(properties
-                .arch$tab(TinyMobFarm.TINY_MOB_FARM_TAB)
                 .enchantable(1)
                 .durability(TinyMobFarmConfig.lassoDurability.get()));
     }
@@ -48,7 +49,8 @@ public class LassoItem extends Item {
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            if (target.getType().arch$registryName() instanceof Identifier location && TinyMobFarmConfig.blacklistedMobs.get().contains(location.toString())) {
+            Identifier targetLocation = EntityType.getKey(target.getType());
+            if (TinyMobFarmConfig.blacklistedMobs.get().contains(targetLocation.toString())) {
                 serverPlayer.sendSystemMessage(TinyMobFarm.translatable("error.blacklist_mob").withStyle(ChatFormatting.RED));
                 return InteractionResult.SUCCESS;
             }
@@ -62,7 +64,7 @@ public class LassoItem extends Item {
 
                 LassoData lassoData = new LassoData(
                         target.getName().getString(),
-                        target.getType().arch$registryName(),
+                        targetLocation,
                         mobData.buildResult(),
                         target.getHealth(),
                         target.getMaxHealth(),
@@ -106,7 +108,7 @@ public class LassoItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, TooltipDisplay tooltipDisplay, Consumer<Component> consumer, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack itemStack, @NonNull TooltipContext tooltipContext, @NonNull TooltipDisplay tooltipDisplay, @NonNull Consumer<Component> consumer, @NonNull TooltipFlag tooltipFlag) {
         if (itemStack.has(TinyMobFarm.LASSO_DATA.get())) {
             LassoData data = itemStack.get(TinyMobFarm.LASSO_DATA.get());
             consumer.accept(TinyMobFarm.translatable("tooltip.release_mob.key", ChatFormatting.GRAY));

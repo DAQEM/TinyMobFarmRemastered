@@ -29,7 +29,7 @@ public class ProgressBarComponent extends AbstractComponent {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         guiGraphics.fill(getTotalX(), getTotalY(), getTotalX() + (int) (getWidth() * getProgressPercentage()), getTotalY() + getHeight(), color);
     }
 }
