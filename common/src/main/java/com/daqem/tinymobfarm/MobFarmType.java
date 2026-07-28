@@ -1,6 +1,6 @@
 package com.daqem.tinymobfarm;
 
-import com.daqem.tinymobfarm.config.TMFConfig;
+import com.daqem.tinymobfarm.config.TinyMobFarmConfig;
 import com.daqem.tinymobfarm.item.component.LassoData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -16,14 +16,14 @@ import java.util.function.Supplier;
 
 public enum MobFarmType {
 
-    WOOD("wood_farm", Blocks.OAK_WOOD, TMFConfig.woodFarmAllowsHostile, new int[]{2, 3, 3}, TMFConfig.woodFarmSpeed, TMFConfig.woodFarmEnabled),
-    STONE("stone_farm", Blocks.STONE, TMFConfig.stoneFarmAllowsHostile, new int[]{1, 2, 3}, TMFConfig.stoneFarmSpeed, TMFConfig.stoneFarmEnabled),
-    IRON("iron_farm", Blocks.IRON_BLOCK, TMFConfig.ironFarmAllowsHostile, new int[]{1, 2}, TMFConfig.ironFarmSpeed, TMFConfig.ironFarmEnabled),
-    GOLD("gold_farm", Blocks.GOLD_BLOCK, TMFConfig.goldFarmAllowsHostile, new int[]{1, 1, 2}, TMFConfig.goldFarmSpeed, TMFConfig.goldFarmEnabled),
-    DIAMOND("diamond_farm", Blocks.DIAMOND_BLOCK, TMFConfig.diamondFarmAllowsHostile, new int[]{1}, TMFConfig.diamondFarmSpeed, TMFConfig.diamondFarmEnabled),
-    EMERALD("emerald_farm", Blocks.EMERALD_BLOCK, TMFConfig.emeraldFarmAllowsHostile, new int[]{0, 1, 1}, TMFConfig.emeraldFarmSpeed, TMFConfig.emeraldFarmEnabled),
-    INFERNAL("inferno_farm", Blocks.OBSIDIAN, TMFConfig.infernoFarmAllowsHostile, new int[]{0, 0, 1}, TMFConfig.infernoFarmSpeed, TMFConfig.infernoFarmEnabled),
-    ULTIMATE("ultimate_farm", Blocks.OBSIDIAN, TMFConfig.ultimateFarmAllowsHostile, new int[]{0}, TMFConfig.ultimateFarmSpeed, TMFConfig.ultimateFarmEnabled);
+    WOOD("wood_farm", Blocks.OAK_WOOD, TinyMobFarmConfig.woodFarmAllowsHostile, new int[]{2, 3, 3}, TinyMobFarmConfig.woodFarmSpeed, TinyMobFarmConfig.woodFarmEnabled),
+    STONE("stone_farm", Blocks.STONE, TinyMobFarmConfig.stoneFarmAllowsHostile, new int[]{1, 2, 3}, TinyMobFarmConfig.stoneFarmSpeed, TinyMobFarmConfig.stoneFarmEnabled),
+    IRON("iron_farm", Blocks.IRON_BLOCK, TinyMobFarmConfig.ironFarmAllowsHostile, new int[]{1, 2}, TinyMobFarmConfig.ironFarmSpeed, TinyMobFarmConfig.ironFarmEnabled),
+    GOLD("gold_farm", Blocks.GOLD_BLOCK, TinyMobFarmConfig.goldFarmAllowsHostile, new int[]{1, 1, 2}, TinyMobFarmConfig.goldFarmSpeed, TinyMobFarmConfig.goldFarmEnabled),
+    DIAMOND("diamond_farm", Blocks.DIAMOND_BLOCK, TinyMobFarmConfig.diamondFarmAllowsHostile, new int[]{1}, TinyMobFarmConfig.diamondFarmSpeed, TinyMobFarmConfig.diamondFarmEnabled),
+    EMERALD("emerald_farm", Blocks.EMERALD_BLOCK, TinyMobFarmConfig.emeraldFarmAllowsHostile, new int[]{0, 1, 1}, TinyMobFarmConfig.emeraldFarmSpeed, TinyMobFarmConfig.emeraldFarmEnabled),
+    INFERNAL("inferno_farm", Blocks.OBSIDIAN, TinyMobFarmConfig.infernoFarmAllowsHostile, new int[]{0, 0, 1}, TinyMobFarmConfig.infernoFarmSpeed, TinyMobFarmConfig.infernoFarmEnabled),
+    ULTIMATE("ultimate_farm", Blocks.OBSIDIAN, TinyMobFarmConfig.ultimateFarmAllowsHostile, new int[]{0}, TinyMobFarmConfig.ultimateFarmSpeed, TinyMobFarmConfig.ultimateFarmEnabled);
 
     private final String registryName;
     private final Block baseBlock;

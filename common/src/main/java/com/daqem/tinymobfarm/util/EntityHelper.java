@@ -1,34 +1,21 @@
 package com.daqem.tinymobfarm.util;
 
-import com.daqem.tinymobfarm.config.TMFConfig;
+import com.daqem.knot.api.util.EntityHooks;
+import com.daqem.tinymobfarm.config.TinyMobFarmConfig;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.item.component.LassoData;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,44 +26,17 @@ public class EntityHelper {
         Entity entity = getEntityFromLasso(stack, BlockPos.ZERO, level);
         if (entity == null) return new ArrayList<>();
 
-        ResourceKey<LootTable> lootTableKey = entity.getType().getDefaultLootTable().get();
-        LootTable lootTable = level.getServer().reloadableRegistries().getLootTable(lootTableKey);
-
         ServerPlayer daniel = FakePlayerHelper.getPlayer(level);
         if (daniel == null) {
             throw new IllegalStateException("Failed to retrieve fake player");
         }
 
-        Holder<Enchantment> registryReference = level.registryAccess()
-                .lookup(Enchantments.LOOTING.registryKey())
-                .flatMap(lookup -> lookup.get(Enchantments.LOOTING))
-                .orElseThrow(() -> new IllegalStateException("Looting enchantment not found"));
+        // If lasso looting is allowed, pass the lasso as the weapon to apply its looting level.
+        // Otherwise, pass an empty stack so no looting is applied.
+        ItemStack weapon = TinyMobFarmConfig.allowLassoLooting.get() ? stack : ItemStack.EMPTY;
 
-        int lootingLevel = EnchantmentHelper.getItemEnchantmentLevel(registryReference, stack);
-        ItemStack sword = new ItemStack(Items.DIAMOND_SWORD);
-
-        if (TMFConfig.allowLassoLooting.get() && lootingLevel > 0) {
-            sword.enchant(registryReference, lootingLevel);
-        }
-        daniel.addItem(sword);
-
-        Holder<DamageType> damageTypeHolder = level.registryAccess().lookup(Registries.DAMAGE_TYPE)
-                .flatMap(lookup -> lookup.get(DamageTypes.PLAYER_ATTACK))
-                .orElseThrow(() -> new IllegalStateException("Damage type not found"));
-        DamageSource damageSource = new DamageSource(damageTypeHolder, daniel);
-
-        LootParams lootParams = new LootParams.Builder(level)
-                .withParameter(LootContextParams.ATTACKING_ENTITY, daniel)
-                .withParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, daniel)
-                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, daniel)
-                .withParameter(LootContextParams.THIS_ENTITY, entity)
-                .withParameter(LootContextParams.ORIGIN, entity.position())
-                .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
-                .create(LootContextParamSets.ENTITY);
-
-        return lootTable.getRandomItems(lootParams);
+        return EntityHooks.generateLoot(level, entity, daniel, weapon);
     }
-
 
     public static Entity getEntityFromLasso(ItemStack lasso, BlockPos pos, Level level) {
         if (!lasso.has(TinyMobFarm.LASSO_DATA.get())) return null;

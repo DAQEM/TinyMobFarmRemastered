@@ -1,6 +1,6 @@
 package com.daqem.tinymobfarm.item;
 
-import com.daqem.tinymobfarm.config.TMFConfig;
+import com.daqem.tinymobfarm.config.TinyMobFarmConfig;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.item.component.LassoData;
 import com.daqem.tinymobfarm.util.EntityHelper;
@@ -12,7 +12,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,7 +37,7 @@ public class LassoItem extends Item {
         super(properties
                 .arch$tab(TinyMobFarm.TINY_MOB_FARM_TAB)
                 .enchantable(1)
-                .durability(TMFConfig.lassoDurability.get()));
+                .durability(TinyMobFarmConfig.lassoDurability.get()));
     }
 
     public @NotNull InteractionResult interactMob(ItemStack stack, Player player, LivingEntity target) {
@@ -49,11 +48,11 @@ public class LassoItem extends Item {
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            if (target.getType().arch$registryName() instanceof Identifier location && TMFConfig.blacklistedMobs.get().contains(location.toString())) {
+            if (target.getType().arch$registryName() instanceof Identifier location && TinyMobFarmConfig.blacklistedMobs.get().contains(location.toString())) {
                 serverPlayer.sendSystemMessage(TinyMobFarm.translatable("error.blacklist_mob").withStyle(ChatFormatting.RED));
                 return InteractionResult.SUCCESS;
             }
-            try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(target.problemPath(), TinyMobFarm.LOGGER)) {
+            try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(target.problemPath(), TinyMobFarm.API.LOGGER)) {
                 TagValueOutput mobData = TagValueOutput.createWithContext(scopedCollector, target.registryAccess());
                 target.saveWithoutId(mobData);
 

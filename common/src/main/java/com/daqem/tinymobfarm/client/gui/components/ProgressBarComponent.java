@@ -1,7 +1,7 @@
 package com.daqem.tinymobfarm.client.gui.components;
 
 import com.daqem.uilib.gui.component.AbstractComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class ProgressBarComponent extends AbstractComponent {
 
@@ -29,7 +29,7 @@ public class ProgressBarComponent extends AbstractComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         guiGraphics.fill(getTotalX(), getTotalY(), getTotalX() + (int) (getWidth() * getProgressPercentage()), getTotalY() + getHeight(), color);
     }
 }

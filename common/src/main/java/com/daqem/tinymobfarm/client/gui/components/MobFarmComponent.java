@@ -7,7 +7,7 @@ import com.daqem.tinymobfarm.item.LassoItem;
 import com.daqem.uilib.gui.component.sprite.SpriteComponent;
 import com.daqem.uilib.gui.component.text.TextAlign;
 import com.daqem.uilib.gui.component.text.TextComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -45,7 +45,7 @@ public class MobFarmComponent extends SpriteComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         super.render(guiGraphics, mouseX, mouseY, partialTick, parentWidth, parentHeight);
         errorText.setText(getLassoError());
 

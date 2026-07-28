@@ -1,7 +1,7 @@
 package com.daqem.tinymobfarm.blockentity;
 
+import com.daqem.knot.Knot;
 import com.daqem.tinymobfarm.MobFarmType;
-import com.daqem.tinymobfarm.TinyMobFarmExpectPlatform;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.client.gui.MobFarmMenu;
 import com.daqem.tinymobfarm.item.component.LassoData;
@@ -39,6 +39,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 
@@ -107,7 +108,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
 
                         if (level instanceof ServerLevel serverLevel) {
                             ServerPlayer daniel = FakePlayerHelper.getPlayer(serverLevel);
-                            this.getLasso().hurtAndBreak(this.mobFarmData.getRandomDamage(serverLevel.random), serverLevel, daniel, consumer -> {
+                            this.getLasso().hurtAndBreak(this.mobFarmData.getRandomDamage(serverLevel.getRandom()), serverLevel, daniel, consumer -> {
                             });
                         }
                         this.saveAndSync();
@@ -134,8 +135,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
                 for (ItemStack drop : drops) {
                     if (drop.isEmpty()) continue;
 
-                    // Use the cross-platform helper to insert items
-                    ItemStack remainder = TinyMobFarmExpectPlatform.insertItem(
+                    ItemStack remainder = Knot.ITEM_TRANSFER.insertItem(
                             serverLevel,
                             targetPos,
                             targetSide,
@@ -222,7 +222,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     }
 
     @Override
-    protected void loadAdditional(ValueInput input) {
+    protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
         input.getInt(MOB_FARM_DATA).ifPresent(value -> this.mobFarmData = MobFarmType.values()[value]);
         input.getInt(CURR_PROGRESS).ifPresent(value -> this.progress = value);
@@ -232,7 +232,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     }
 
     @Override
-    protected void saveAdditional(ValueOutput output) {
+    protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
         if (this.mobFarmData != null) {
             output.putInt(MOB_FARM_DATA, this.mobFarmData.ordinal());
@@ -248,12 +248,12 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider provider) {
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NonNull Provider provider) {
         return this.saveWithoutMetadata(provider);
     }
 
     @Override
-    public AbstractContainerMenu createMenu(int windowId, Inventory inv, Player player) {
+    public AbstractContainerMenu createMenu(int windowId, @NonNull Inventory inv, @NonNull Player player) {
         return new MobFarmMenu(windowId, inv, this, this.dataAccess);
     }
 
@@ -306,7 +306,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     }
 
     @Override
-    public boolean stillValid(Player player) {
+    public boolean stillValid(@NonNull Player player) {
         return Container.stillValidBlockEntity(this, player);
     }
 

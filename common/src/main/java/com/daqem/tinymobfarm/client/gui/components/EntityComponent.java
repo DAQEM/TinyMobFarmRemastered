@@ -3,14 +3,14 @@ package com.daqem.tinymobfarm.client.gui.components;
 import com.daqem.tinymobfarm.util.EntityHelper;
 import com.daqem.uilib.gui.component.AbstractComponent;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Supplier;
 
-import static net.minecraft.client.gui.screens.inventory.InventoryScreen.renderEntityInInventoryFollowsMouse;
+import static net.minecraft.client.gui.screens.inventory.InventoryScreen.extractEntityInInventoryFollowsMouse;
 
 public class EntityComponent extends AbstractComponent {
 
@@ -21,12 +21,12 @@ public class EntityComponent extends AbstractComponent {
         this.itemStackSupplier = itemStackSupplier;
     }
 
-    public void renderEntity(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    public void renderEntity(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         ItemStack lasso = itemStackSupplier.get();
         if (lasso.isEmpty()) return;
         LivingEntity livingEntity = (LivingEntity) EntityHelper.getEntityFromLasso(lasso, BlockPos.ZERO, Minecraft.getInstance().level);
         if (livingEntity == null) return;
-        renderEntityInInventoryFollowsMouse(
+        extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 getTotalX(),
                 getTotalY(),
@@ -41,7 +41,7 @@ public class EntityComponent extends AbstractComponent {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick, int parentWidth, int parentHeight) {
         renderEntity(guiGraphics, mouseX, mouseY);
     }
 }

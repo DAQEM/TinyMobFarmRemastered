@@ -3,7 +3,7 @@ package com.daqem.tinymobfarm.client.gui;
 import com.daqem.tinymobfarm.client.gui.components.MobFarmComponent;
 import com.daqem.uilib.gui.AbstractContainerScreen;
 import com.daqem.uilib.gui.background.BlurredBackground;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -27,11 +27,11 @@ public class MobFarmScreen extends AbstractContainerScreen<MobFarmMenu> {
 
 	//Makes sure the default titles are not rendered
 	@Override
-	protected void renderLabels(GuiGraphics guiGraphics, int i, int j) {
+	protected void renderLabels(GuiGraphicsExtractor guiGraphics, int i, int j) {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+	public void render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
 		super.render(guiGraphics, mouseX, mouseY, partialTick);
 		this.renderTooltip(guiGraphics, mouseX, mouseY);
 	}

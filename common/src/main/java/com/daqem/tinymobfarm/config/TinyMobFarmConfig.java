@@ -1,7 +1,7 @@
 package com.daqem.tinymobfarm.config;
 
+import com.daqem.knot.api.platform.Platform;
 import com.daqem.tinymobfarm.TinyMobFarm;
-import com.daqem.yamlconfig.YamlConfigExpectPlatform;
 import com.daqem.yamlconfig.api.config.ConfigExtension;
 import com.daqem.yamlconfig.api.config.ConfigType;
 import com.daqem.yamlconfig.api.config.IConfigBuilder;
@@ -10,7 +10,7 @@ import com.daqem.yamlconfig.impl.config.ConfigBuilder;
 
 import java.util.List;
 
-public class TMFConfig {
+public class TinyMobFarmConfig {
 
     public static final IConfigEntry<Integer> lassoDurability;
     public static final IConfigEntry<Boolean> allowLassoLooting;
@@ -53,7 +53,7 @@ public class TMFConfig {
                 TinyMobFarm.MOD_ID + "_common",
                 ConfigExtension.YAML,
                 ConfigType.COMMON,
-                YamlConfigExpectPlatform.getConfigDirectory().resolve(TinyMobFarm.MOD_ID)
+                Platform.INFO.getConfigFolder().resolve(TinyMobFarm.MOD_ID)
         );
 
         builder.push("lasso");
