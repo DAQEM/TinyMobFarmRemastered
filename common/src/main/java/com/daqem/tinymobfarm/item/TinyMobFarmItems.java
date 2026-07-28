@@ -32,4 +32,7 @@ public interface TinyMobFarmItems {
     static <T extends Item> RegistryEntry<T> item(String id, Function<Item.Properties, T> constructor) {
         return ITEMS.register(id, (key) -> constructor.apply(((ItemPropertiesExtension) new Item.Properties().setId(key)).knot$tab(TinyMobFarm.TINY_MOB_FARM_TAB.getKey())));
     }
+
+    static void init() {
+    }
 }

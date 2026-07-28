@@ -51,6 +51,8 @@ public class TinyMobFarm {
     public static void init() {
         TinyMobFarmConfig.init();
         MobInteractionEvent.registerEvent();
+        TinyMobFarmBlocks.init();
+        TinyMobFarmItems.init();
     }
 
     public static MutableComponent translatable(String s) {

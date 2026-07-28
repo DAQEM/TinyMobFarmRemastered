@@ -28,4 +28,7 @@ public interface TinyMobFarmBlocks {
     static <T extends Block> RegistryEntry<T> block(String id, Function<BlockBehaviour.Properties, T> constructor) {
         return BLOCKS.register(id, (key) -> constructor.apply(BlockBehaviour.Properties.of().setId(key)));
     }
+
+    static void init() {
+    }
 }
