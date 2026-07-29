@@ -18,6 +18,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -51,6 +52,7 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
     private MobFarmType mobFarmData;
     private LivingEntity livingEntity;
     private Direction modelFacing = Direction.NORTH;
+    private LassoData currentLassoData;
     protected NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
     private int progress;
     private boolean powered;
@@ -97,6 +99,51 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
             this.updateRedstone();
             this.shouldUpdate = false;
         }
+        if (this.livingEntity != null) {
+            if (this.level != null && this.level.isClientSide()) {
+                this.livingEntity.yHeadRotO = this.livingEntity.yHeadRot;
+                this.livingEntity.yBodyRotO = this.livingEntity.yBodyRot;
+                this.livingEntity.xRotO = this.livingEntity.getXRot();
+                this.livingEntity.yRotO = this.livingEntity.getYRot();
+
+                Player nearestPlayer = null;
+                double closestDistSq = 25.0D; // 5 blocks max distance
+                for (Player player : this.level.players()) {
+                    double distSq = player.distanceToSqr(this.worldPosition.getX() + 0.5D, this.worldPosition.getY() + 0.5D, this.worldPosition.getZ() + 0.5D);
+                    if (distSq < closestDistSq) {
+                        closestDistSq = distSq;
+                        nearestPlayer = player;
+                    }
+                }
+
+                float targetYaw;
+                float targetPitch;
+
+                if (nearestPlayer != null) {
+                    double dx = nearestPlayer.getX() - (this.worldPosition.getX() + 0.5D);
+                    double dy = nearestPlayer.getEyeY() - (this.worldPosition.getY() + 0.5D);
+                    double dz = nearestPlayer.getZ() - (this.worldPosition.getZ() + 0.5D);
+
+                    double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+                    float globalYaw = (float) (Math.atan2(dz, dx) * (180.0D / Math.PI)) - 90.0F;
+                    // Make it relative to the renderer's facing direction
+                    targetYaw = globalYaw - this.modelFacing.toYRot();
+                    targetPitch = (float) -(Math.atan2(dy, horizontalDistance) * (180.0D / Math.PI));
+                } else {
+                    targetYaw = 0.0F; // Defaults to looking straightforward
+                    targetPitch = 0.0F;
+                }
+
+                // Smoothly update ONLY the head rotations towards the target pitch and yaw
+                this.livingEntity.yHeadRot = approachRotation(this.livingEntity.yHeadRot, targetYaw, 15.0F);
+                this.livingEntity.setXRot(approachRotation(this.livingEntity.getXRot(), targetPitch, 15.0F));
+
+                // Force the body to stay facing straight ahead (0 degrees relative to the block)
+                this.livingEntity.yBodyRot = approachRotation(this.livingEntity.yBodyRot, 0.0F, 15.0F);
+                this.livingEntity.setYRot(approachRotation(this.livingEntity.getYRot(), 0.0F, 15.0F));
+            }
+            this.livingEntity.tickCount++;
+        }
         if (this.isWorking()) {
             this.progress++;
             if (this.level != null) {
@@ -118,6 +165,17 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
         } else {
             this.progress = 0;
         }
+    }
+
+    private float approachRotation(float current, float target, float maxChange) {
+        float diff = Mth.wrapDegrees(target - current);
+        if (diff > maxChange) {
+            diff = maxChange;
+        }
+        if (diff < -maxChange) {
+            diff = -maxChange;
+        }
+        return current + diff;
     }
 
     private void generateDrops() {
@@ -163,20 +221,30 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
         if (this.level.isClientSide()) {
             if (this.getLasso().isEmpty()) {
                 this.livingEntity = null;
+                this.currentLassoData = null;
             } else {
                 LassoData data = this.getLasso().get(TinyMobFarm.LASSO_DATA.get());
                 if (data != null) {
-                    String mobName = data.mobName();
-                    String mobId = data.mobId().toString();
-                    //noinspection EqualsBetweenInconvertibleTypes
-                    if (this.livingEntity == null || !this.livingEntity.getName().getContents().equals(mobName)) {
-                        CompoundTag entityData = data.mobData();
+                    if (this.livingEntity == null || !data.equals(this.currentLassoData)) {
+                        String mobId = data.mobId().toString();
+                        CompoundTag entityData = data.mobData().copy();
                         entityData.putString("id", mobId);
                         Entity newModel = EntityType.loadEntityRecursive(entityData, this.level, EntitySpawnReason.COMMAND, entity -> entity);
 
-                        if (newModel instanceof LivingEntity) {
-                            this.livingEntity = (LivingEntity) newModel;
+                        if (newModel instanceof LivingEntity living) {
+                            this.livingEntity = living;
+                            this.currentLassoData = data;
                             this.modelFacing = this.level.getBlockState(this.worldPosition).getValue(HorizontalDirectionalBlock.FACING);
+
+                            // Instantly clear out saved rotations so it starts correctly facing forwards
+                            this.livingEntity.setYRot(0.0F);
+                            this.livingEntity.setXRot(0.0F);
+                            this.livingEntity.yBodyRot = 0.0F;
+                            this.livingEntity.yHeadRot = 0.0F;
+                            this.livingEntity.xRotO = 0.0F;
+                            this.livingEntity.yRotO = 0.0F;
+                            this.livingEntity.yBodyRotO = 0.0F;
+                            this.livingEntity.yHeadRotO = 0.0F;
                         }
                     }
                 }

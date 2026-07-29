@@ -29,9 +29,9 @@ public class TinyMobFarm {
     public static final Knot API = new Knot(MOD_ID);
 
     public static final Registry<CreativeModeTab> TABS = Knot.REGISTRAR.createRegistry(BuiltInRegistries.CREATIVE_MODE_TAB, MOD_ID);
-    public static final RegistryEntry<CreativeModeTab> TINY_MOB_FARM_TAB = TABS.register("my_tab", () ->
+    public static final RegistryEntry<CreativeModeTab> TINY_MOB_FARM_TAB = TABS.register("tab", () ->
             Knot.CREATIVE_TABS_REGISTRY.build(
-                    Component.translatable("itemGroup." + TinyMobFarm.MOD_ID + "." + TinyMobFarm.MOD_ID + "_tab"),
+                    Component.translatable("itemGroup.tiny_mob_farm"),
                     () -> new ItemStack(TinyMobFarmItems.WOODEN_MOB_FARM.get())
             )
     );
@@ -51,8 +51,12 @@ public class TinyMobFarm {
     public static void init() {
         TinyMobFarmConfig.init();
         MobInteractionEvent.registerEvent();
-        TinyMobFarmBlocks.init();
-        TinyMobFarmItems.init();
+        TinyMobFarmBlocks.BLOCKS.register();
+        TinyMobFarmItems.ITEMS.register();
+        TABS.register();
+        MENUS.register();
+        BLOCK_ENTITIES.register();
+        COMPONENTS.register();
     }
 
     public static MutableComponent translatable(String s) {

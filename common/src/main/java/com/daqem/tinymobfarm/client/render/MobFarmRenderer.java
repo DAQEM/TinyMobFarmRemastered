@@ -29,6 +29,7 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
         return new MobFarmRenderState();
     }
 
+    @Override
     public void extractRenderState(
             @NonNull MobFarmBlockEntity mobFarmBlockEntity,
             @NonNull MobFarmRenderState MobFarmRenderState,
@@ -44,7 +45,7 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
         MobFarmRenderState.angle = mobFarmBlockEntity.getBlockState().getValue(MobFarmBlock.FACING).toYRot();
     }
 
-    static void extractMobFarmData(
+    private static void extractMobFarmData(
             MobFarmRenderState renderState,
             float f,
             @Nullable Entity entity,
@@ -54,13 +55,14 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
             renderState.displayEntity = entityRenderDispatcher.extractEntity(entity, f);
             renderState.displayEntity.lightCoords = renderState.lightCoords;
             renderState.scale = 0.53125F;
-            float g = Math.max(entity.getBbWidth(), entity.getBbHeight());
+            float g = Math.max(entity.getBbWidth() * 1.8F, entity.getBbHeight());
             if (g > 1.0) {
                 renderState.scale /= g;
             }
         }
     }
 
+    @Override
     public void submit(
             MobFarmRenderState renderState,
             @NonNull PoseStack poseStack,
@@ -80,7 +82,7 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
         }
     }
 
-    public static void submitEntityInMobFarm(
+    private static void submitEntityInMobFarm(
             PoseStack poseStack,
             SubmitNodeCollector submitNodeCollector,
             EntityRenderState entityRenderState,
@@ -90,7 +92,7 @@ public class MobFarmRenderer implements BlockEntityRenderer<MobFarmBlockEntity, 
             CameraRenderState cameraRenderState
     ) {
         poseStack.pushPose();
-        poseStack.translate(0.5F, 0.125F, 0.5F);
+        poseStack.translate(0.5F, 0.126F, 0.5F);
         poseStack.scale(scale, scale, scale);
         poseStack.mulPose(Axis.YP.rotationDegrees(-angle));
         entityRenderDispatcher.submit(entityRenderState, cameraRenderState, 0.0, 0.0, 0.0, poseStack, submitNodeCollector);

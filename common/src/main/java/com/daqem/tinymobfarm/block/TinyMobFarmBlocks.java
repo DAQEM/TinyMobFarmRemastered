@@ -6,7 +6,6 @@ import com.daqem.knot.registry.RegistryEntry;
 import com.daqem.tinymobfarm.MobFarmType;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
@@ -27,8 +26,5 @@ public interface TinyMobFarmBlocks {
 
     static <T extends Block> RegistryEntry<T> block(String id, Function<BlockBehaviour.Properties, T> constructor) {
         return BLOCKS.register(id, (key) -> constructor.apply(BlockBehaviour.Properties.of().setId(key)));
-    }
-
-    static void init() {
     }
 }

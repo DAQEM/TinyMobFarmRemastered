@@ -42,7 +42,7 @@ public class EntityHelper {
         if (!lasso.has(TinyMobFarm.LASSO_DATA.get())) return null;
         LassoData data = lasso.get(TinyMobFarm.LASSO_DATA.get());
         if (data == null) return null;
-        CompoundTag mobData = data.mobData();
+        CompoundTag mobData = data.mobData().copy();
         Identifier id = data.mobId();
 
         DoubleTag x = DoubleTag.valueOf(pos.getX() + 0.5);
@@ -55,6 +55,15 @@ public class EntityHelper {
         mobData.put("Pos", mobPos);
         mobData.putString("id", id.toString());
 
-        return EntityType.loadEntityRecursive(mobData, level, EntitySpawnReason.MOB_SUMMONED, entity -> entity);
+        Entity entity = EntityType.loadEntityRecursive(mobData, level, EntitySpawnReason.MOB_SUMMONED, e -> e);
+        if (entity != null) {
+            entity.xRotO = entity.getXRot();
+            entity.yRotO = entity.getYRot();
+            if (entity instanceof net.minecraft.world.entity.LivingEntity living) {
+                living.yBodyRotO = living.yBodyRot;
+                living.yHeadRotO = living.yHeadRot;
+            }
+        }
+        return entity;
     }
 }
