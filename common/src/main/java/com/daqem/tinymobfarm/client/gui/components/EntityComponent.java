@@ -43,6 +43,7 @@ public class EntityComponent extends AbstractComponent {
             this.cachedEntity = (LivingEntity) EntityHelper.getEntityFromLasso(lasso, BlockPos.ZERO, minecraft.level);
 
             if (this.cachedEntity != null) {
+                this.cachedEntity.setId(this.cachedEntity.getUUID().hashCode());
                 // The UI renders entities facing 180 degrees by default.
                 // We instantly snap the entity to this rotation so it doesn't start backwards.
                 float defaultRot = 180.0F;

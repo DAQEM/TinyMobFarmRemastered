@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntitySpawnRequest;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -55,7 +56,7 @@ public class EntityHelper {
         mobData.put("Pos", mobPos);
         mobData.putString("id", id.toString());
 
-        Entity entity = EntityType.loadEntityRecursive(mobData, level, EntitySpawnReason.MOB_SUMMONED, e -> e);
+        Entity entity = EntityType.loadEntityRecursive(mobData, level, new EntitySpawnRequest(EntitySpawnReason.MOB_SUMMONED, true), e -> e);
         if (entity != null) {
             entity.xRotO = entity.getXRot();
             entity.yRotO = entity.getYRot();

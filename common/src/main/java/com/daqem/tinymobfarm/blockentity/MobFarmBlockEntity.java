@@ -22,10 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -229,9 +226,10 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
                         String mobId = data.mobId().toString();
                         CompoundTag entityData = data.mobData().copy();
                         entityData.putString("id", mobId);
-                        Entity newModel = EntityType.loadEntityRecursive(entityData, this.level, EntitySpawnReason.COMMAND, entity -> entity);
+                        Entity newModel = EntityType.loadEntityRecursive(entityData, this.level, new EntitySpawnRequest(EntitySpawnReason.COMMAND, true), entity -> entity);
 
                         if (newModel instanceof LivingEntity living) {
+                            living.setId(living.getUUID().hashCode());
                             this.livingEntity = living;
                             this.currentLassoData = data;
                             this.modelFacing = this.level.getBlockState(this.worldPosition).getValue(HorizontalDirectionalBlock.FACING);
