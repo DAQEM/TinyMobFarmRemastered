@@ -4,6 +4,7 @@ import com.daqem.knot.Knot;
 import com.daqem.tinymobfarm.MobFarmType;
 import com.daqem.tinymobfarm.TinyMobFarm;
 import com.daqem.tinymobfarm.client.gui.MobFarmMenu;
+import com.daqem.tinymobfarm.config.TinyMobFarmConfig;
 import com.daqem.tinymobfarm.item.component.LassoData;
 import com.daqem.tinymobfarm.util.EntityHelper;
 import com.daqem.tinymobfarm.util.FakePlayerHelper;
@@ -35,6 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
@@ -182,7 +184,8 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
             if (stackData == null) return;
 
             if (this.level instanceof ServerLevel serverLevel) {
-                List<ItemStack> drops = EntityHelper.generateLoot(serverLevel, lasso);
+                EntityHelper.FarmResult result = EntityHelper.generateLootAndXp(serverLevel, lasso);
+                List<ItemStack> drops = result.loot();
                 Direction direction = Direction.DOWN;
                 BlockPos targetPos = getBlockPos().relative(direction);
                 Direction targetSide = direction.getOpposite();
@@ -207,6 +210,23 @@ public class MobFarmBlockEntity extends BlockEntity implements MenuProvider, Con
                                 remainder
                         );
                         this.level.addFreshEntity(entityItem);
+                    }
+                }
+
+                // Drop experience: inject directly into an XP Tank directly below if present,
+                // otherwise spawn orbs at the same output position as the item drops.
+                if (TinyMobFarmConfig.farmXpEnabled.get() && result.xp() > 0) {
+                    int amount = (int) (result.xp() * TinyMobFarmConfig.farmXpMultiplier.get());
+                    if (amount > 0) {
+                        if (serverLevel.getBlockEntity(targetPos) instanceof XpTankBlockEntity tank) {
+                            tank.addXp(amount);
+                        } else {
+                            ExperienceOrb.award(serverLevel,
+                                    new Vec3(this.worldPosition.getX() + 0.5,
+                                            this.worldPosition.getY() + (1F / 14F * 13F),
+                                            this.worldPosition.getZ() + 0.5),
+                                    amount);
+                        }
                     }
                 }
             }

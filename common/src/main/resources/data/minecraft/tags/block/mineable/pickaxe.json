@@ -6,6 +6,8 @@
     "tinymobfarm:diamond_farm",
     "tinymobfarm:emerald_farm",
     "tinymobfarm:inferno_farm",
-    "tinymobfarm:ultimate_farm"
+    "tinymobfarm:ultimate_farm",
+    "tinymobfarm:xp_tank",
+    "tinymobfarm:xp_faucet"
   ]
 }

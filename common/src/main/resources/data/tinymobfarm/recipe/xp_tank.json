@@ -1,0 +1,15 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"OOO",
+		"OGO",
+		"OOO"
+	],
+	"key": {
+		"O": "minecraft:obsidian",
+		"G": "minecraft:glass"
+	},
+	"result": {
+		"id": "tinymobfarm:xp_tank"
+	}
+}

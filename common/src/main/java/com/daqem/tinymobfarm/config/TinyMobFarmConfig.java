@@ -47,6 +47,18 @@ public class TinyMobFarmConfig {
 
     public static final IConfigEntry<List<String>> blacklistedMobs;
 
+    // Farm Experience
+    public static final IConfigEntry<Boolean> farmXpEnabled;
+    public static final IConfigEntry<Double> farmXpMultiplier;
+
+    // XP Tank
+    public static final IConfigEntry<Double> xpTankRadius;
+    public static final IConfigEntry<Integer> xpTankCapacity;
+    public static final IConfigEntry<XpTankMode> xpTankMode;
+
+    // XP Faucet
+    public static final IConfigEntry<Integer> xpFaucetFlowPerTick;
+
     static {
         IConfigBuilder builder = new ConfigBuilder(
                 TinyMobFarm.MOD_ID,
@@ -64,6 +76,11 @@ public class TinyMobFarmConfig {
         builder.pop();
 
         builder.push("farms");
+
+        farmXpEnabled = builder.defineBoolean("xpEnabled", true)
+                .withComments("Whether farms drop experience on kill.");
+        farmXpMultiplier = builder.defineDouble("xpMultiplier", 1.0, 0.0, Double.MAX_VALUE)
+                .withComments("Multiplier applied to experience dropped by farms.");
 
         // Wood
         builder.push("wood");
@@ -122,6 +139,20 @@ public class TinyMobFarmConfig {
         builder.pop();
 
         builder.pop(); // End farms
+
+        builder.push("xp_tank");
+        xpTankRadius = builder.defineDouble("radius", 6.0, 1.0, 64.0)
+                .withComments("Radius in blocks within which the XP Tank absorbs or attracts XP orbs.");
+        xpTankCapacity = builder.defineInteger("capacity", 2000, 1, Integer.MAX_VALUE)
+                .withComments("Maximum stored XP points. The tank's liquid fill is shown relative to this capacity.");
+        xpTankMode = builder.defineEnum("mode", XpTankMode.MAGNET, XpTankMode.class)
+                .withComments("MAGNET pulls XP orbs toward the tank; INSTANT absorbs them immediately while in range.");
+        builder.pop();
+
+        builder.push("xp_faucet");
+        xpFaucetFlowPerTick = builder.defineInteger("flowPerTick", 4, 1, 1000)
+                .withComments("XP points the faucet releases per tick while open.");
+        builder.pop();
 
         builder.push("blacklist");
         blacklistedMobs = builder.defineStringList("blacklisted_mobs", List.of(
