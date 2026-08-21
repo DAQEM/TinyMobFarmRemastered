@@ -5,16 +5,21 @@ import com.daqem.knot.registry.Registry;
 import com.daqem.knot.registry.RegistryEntry;
 import com.daqem.tinymobfarm.block.TinyMobFarmBlocks;
 import com.daqem.tinymobfarm.blockentity.MobFarmBlockEntity;
+import com.daqem.tinymobfarm.blockentity.XpFaucetBlockEntity;
+import com.daqem.tinymobfarm.blockentity.XpTankBlockEntity;
 import com.daqem.tinymobfarm.client.gui.MobFarmMenu;
+import com.daqem.tinymobfarm.client.gui.XpTankMenu;
 import com.daqem.tinymobfarm.config.TinyMobFarmConfig;
 import com.daqem.tinymobfarm.event.MobInteractionEvent;
 import com.daqem.tinymobfarm.item.TinyMobFarmItems;
 import com.daqem.tinymobfarm.item.component.LassoData;
+import com.mojang.serialization.Codec;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
@@ -38,14 +43,26 @@ public class TinyMobFarm {
 
     public static final Registry<MenuType<?>> MENUS = Knot.REGISTRAR.createRegistry(BuiltInRegistries.MENU, MOD_ID);
     public static final RegistryEntry<MenuType<MobFarmMenu>> MOB_FARM_CONTAINER = MENUS.register("mob_farm_menu", () -> new MenuType<>(MobFarmMenu::new, FeatureFlags.VANILLA_SET));
+    public static final RegistryEntry<MenuType<XpTankMenu>> XP_TANK_MENU = MENUS.register("xp_tank_menu", () -> new MenuType<>(XpTankMenu::new, FeatureFlags.VANILLA_SET));
 
     public static final Registry<BlockEntityType<?>> BLOCK_ENTITIES = Knot.REGISTRAR.createRegistry(BuiltInRegistries.BLOCK_ENTITY_TYPE, MOD_ID);
     public static final RegistryEntry<BlockEntityType<MobFarmBlockEntity>> MOB_FARM_TILE_ENTITY = BLOCK_ENTITIES.register("mob_farm_block_entity", () -> new BlockEntityType<>(MobFarmBlockEntity::new, Set.of(
             TinyMobFarmBlocks.WOODEN_MOB_FARM_BLOCK.get(), TinyMobFarmBlocks.STONE_MOB_FARM_BLOCK.get(), TinyMobFarmBlocks.IRON_MOB_FARM_BLOCK.get(), TinyMobFarmBlocks.GOLD_MOB_FARM_BLOCK.get(), TinyMobFarmBlocks.DIAMOND_MOB_FARM_BLOCK.get(),
             TinyMobFarmBlocks.EMERALD_MOB_FARM_BLOCK.get(), TinyMobFarmBlocks.INFERNAL_MOB_FARM_BLOCK.get(), TinyMobFarmBlocks.ULTIMATE_MOB_FARM_BLOCK.get())));
+    public static final RegistryEntry<BlockEntityType<XpTankBlockEntity>> XP_TANK_ENTITY = BLOCK_ENTITIES.register("xp_tank_block_entity", () -> new BlockEntityType<>(XpTankBlockEntity::new, Set.of(
+            TinyMobFarmBlocks.XP_TANK_BLOCK.get())));
+    public static final RegistryEntry<BlockEntityType<XpFaucetBlockEntity>> XP_FAUCET_ENTITY = BLOCK_ENTITIES.register("xp_faucet_block_entity", () -> new BlockEntityType<>(XpFaucetBlockEntity::new, Set.of(
+            TinyMobFarmBlocks.XP_FAUCET_BLOCK.get())));
 
     public static final Registry<DataComponentType<?>> COMPONENTS = Knot.REGISTRAR.createRegistry(BuiltInRegistries.DATA_COMPONENT_TYPE, MOD_ID);
     public static final RegistryEntry<DataComponentType<LassoData>> LASSO_DATA = COMPONENTS.register("lasso_data", () -> ((DataComponentType.Builder) DataComponentType.builder()).persistent(LassoData.CODEC).networkSynchronized(LassoData.STREAM_CODEC).build());
+    public static final RegistryEntry<DataComponentType<Integer>> TANK_XP_DATA = COMPONENTS.register("tank_xp", () -> ((DataComponentType.Builder) DataComponentType.builder()).persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+
+    /**
+     * Persistent-data tag on XP orbs spawned by the XP Faucet, so the XP Tank does not
+     * immediately re-absorb its own output.
+     */
+    public static final String XP_MARKER_TAG = "tinymobfarm:faucet_flow";
 
 
     public static void init() {

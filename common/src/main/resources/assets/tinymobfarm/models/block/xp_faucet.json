@@ -1,0 +1,44 @@
+{
+	"textures": {
+		"material": "minecraft:block/iron_block",
+		"particle": "minecraft:block/iron_block"
+	},
+	"elements": [
+		{
+			"from": [4, 4, 12],
+			"to": [12, 12, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 8, 8], "texture": "#material"},
+				"east": {"uv": [0, 0, 4, 8], "texture": "#material"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#material"},
+				"west": {"uv": [0, 0, 4, 8], "texture": "#material"},
+				"up": {"uv": [0, 0, 8, 4], "texture": "#material"},
+				"down": {"uv": [0, 0, 8, 4], "texture": "#material"}
+			}
+		},
+		{
+			"from": [6, 6, 4],
+			"to": [10, 10, 12],
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#material"},
+				"east": {"uv": [0, 0, 8, 4], "texture": "#material"},
+				"south": {"uv": [0, 0, 4, 4], "texture": "#material"},
+				"west": {"uv": [0, 0, 8, 4], "texture": "#material"},
+				"up": {"uv": [0, 0, 4, 8], "texture": "#material"},
+				"down": {"uv": [0, 0, 4, 8], "texture": "#material"}
+			}
+		},
+		{
+			"from": [5, 5, 0],
+			"to": [11, 11, 4],
+			"faces": {
+				"north": {"uv": [0, 0, 6, 6], "texture": "#material"},
+				"east": {"uv": [0, 0, 4, 6], "texture": "#material"},
+				"south": {"uv": [0, 0, 6, 6], "texture": "#material"},
+				"west": {"uv": [0, 0, 4, 6], "texture": "#material"},
+				"up": {"uv": [0, 0, 6, 4], "texture": "#material"},
+				"down": {"uv": [0, 0, 6, 4], "texture": "#material"}
+			}
+		}
+	]
+}

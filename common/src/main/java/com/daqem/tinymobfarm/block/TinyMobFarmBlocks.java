@@ -24,6 +24,9 @@ public interface TinyMobFarmBlocks {
     RegistryEntry<MobFarmBlock> INFERNAL_MOB_FARM_BLOCK = block("inferno_farm", p -> new MobFarmBlock(MobFarmType.INFERNAL, p));
     RegistryEntry<MobFarmBlock> ULTIMATE_MOB_FARM_BLOCK = block("ultimate_farm", p -> new MobFarmBlock(MobFarmType.ULTIMATE, p));
 
+    RegistryEntry<XpTankBlock> XP_TANK_BLOCK = block("xp_tank", XpTankBlock::new);
+    RegistryEntry<XpFaucetBlock> XP_FAUCET_BLOCK = block("xp_faucet", XpFaucetBlock::new);
+
     static <T extends Block> RegistryEntry<T> block(String id, Function<BlockBehaviour.Properties, T> constructor) {
         return BLOCKS.register(id, (key) -> constructor.apply(BlockBehaviour.Properties.of().setId(key)));
     }

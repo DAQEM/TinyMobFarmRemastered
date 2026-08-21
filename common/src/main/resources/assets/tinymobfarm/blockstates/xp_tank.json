@@ -1,0 +1,34 @@
+{
+	"variants": {
+		"fill=0": {
+			"model": "tinymobfarm:block/xp_tank"
+		},
+		"fill=1": {
+			"model": "tinymobfarm:block/xp_tank_fill_1"
+		},
+		"fill=2": {
+			"model": "tinymobfarm:block/xp_tank_fill_2"
+		},
+		"fill=3": {
+			"model": "tinymobfarm:block/xp_tank_fill_3"
+		},
+		"fill=4": {
+			"model": "tinymobfarm:block/xp_tank_fill_4"
+		},
+		"fill=5": {
+			"model": "tinymobfarm:block/xp_tank_fill_5"
+		},
+		"fill=6": {
+			"model": "tinymobfarm:block/xp_tank_fill_6"
+		},
+		"fill=7": {
+			"model": "tinymobfarm:block/xp_tank_fill_7"
+		},
+		"fill=8": {
+			"model": "tinymobfarm:block/xp_tank_fill_8"
+		},
+		"fill=9": {
+			"model": "tinymobfarm:block/xp_tank_fill_9"
+		}
+	}
+}

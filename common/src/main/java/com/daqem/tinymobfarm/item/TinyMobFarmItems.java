@@ -24,6 +24,8 @@ public interface TinyMobFarmItems {
     RegistryEntry<MobFarmBlockItem> INFERNAL_MOB_FARM = blockItem("inferno_farm", p -> new MobFarmBlockItem(TinyMobFarmBlocks.INFERNAL_MOB_FARM_BLOCK.get(), p));
     RegistryEntry<MobFarmBlockItem> ULTIMATE_MOB_FARM = blockItem("ultimate_farm", p -> new MobFarmBlockItem(TinyMobFarmBlocks.ULTIMATE_MOB_FARM_BLOCK.get(), p));
     RegistryEntry<LassoItem> LASSO = item("lasso", LassoItem::new);
+    RegistryEntry<XpBlockItem> XP_TANK = blockItem("xp_tank", p -> new XpBlockItem(TinyMobFarmBlocks.XP_TANK_BLOCK.get(), p));
+    RegistryEntry<XpBlockItem> XP_FAUCET = blockItem("xp_faucet", p -> new XpBlockItem(TinyMobFarmBlocks.XP_FAUCET_BLOCK.get(), p));
 
     static <T extends Item> RegistryEntry<T> blockItem(String id, Function<Item.Properties, T> constructor) {
         return ITEMS.register(id, (key) -> constructor.apply(new Item.Properties().setId(key).useBlockDescriptionPrefix()));
